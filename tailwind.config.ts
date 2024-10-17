@@ -9,8 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        gray: {
+          700: "#2C2C2C",
+          800: "#343434",
+          900: "#1F1F1F",
+        },
+        blue: {
+          500: "#0F6FFF",
+        },
+      },
+      fontFamily: {
+        jura: ["Jura", "sans-serif"],
       },
     },
   },
