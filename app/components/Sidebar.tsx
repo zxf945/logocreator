@@ -9,12 +9,58 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const [showAdditionalOptions, setShowAdditionalOptions] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
+  const [selectedLogoStyle, setSelectedLogoStyle] = useState<string | null>(
+    null
+  );
+  const [selectedPrimaryColor, setSelectedPrimaryColor] =
+    useState<string>("Blue");
+  const [selectedBackgroundColor, setSelectedBackgroundColor] =
+    useState<string>("Random");
+  const [selectedColorScheme, setSelectedColorScheme] = useState<string | null>(
+    null
+  );
+  const [additionalInfo, setAdditionalInfo] = useState("");
+
+  // Added missing state variables
+  const [showPrimaryDropdown, setShowPrimaryDropdown] =
+    useState<boolean>(false);
+  const [showBackgroundDropdown, setShowBackgroundDropdown] =
+    useState<boolean>(false);
+
+  const primaryColors = [
+    { name: "Blue", color: "#0F6FFF" },
+    { name: "Red", color: "#FF0000" },
+    { name: "Green", color: "#00FF00" },
+    { name: "Yellow", color: "#FFFF00" },
+  ];
+
+  const backgroundColors = [
+    { name: "Random", color: "#6F6F6F" },
+    { name: "Gray", color: "#CCCCCC" },
+    { name: "Black", color: "#000000" },
+    { name: "White", color: "#FFFFFF" },
+  ];
 
   const colorSchemes = [
-    { name: "Greyscale", colors: ["#FFFFFF", "#BCBCBC", "#797979", "#333333"] },
-    { name: "Cold", colors: ["#C0FDFC", "#3FDBF0", "#78ACF1", "#10029A"] },
-    { name: "Contrast", colors: ["#FF3992", "#FFD425", "#3F00FF", "#B000FF"] },
-    { name: "Warm", colors: ["#F6E1E1", "#F88020", "#D1284C", "#3E0E1F"] },
+    {
+      name: "Greyscale",
+      colors: ["#FFFFFF", "#BCBCBC", "#797979", "#333333"],
+    },
+    {
+      name: "Cold",
+      colors: ["#C0FDFC", "#3FDBF0", "#78ACF1", "#10029A"],
+    },
+    {
+      name: "Contrast",
+      colors: ["#FF3992", "#FFD425", "#3F00FF", "#B000FF"],
+    },
+    {
+      name: "Warm",
+      colors: ["#F6E1E1", "#F88020", "#D1284C", "#3E0E1F"],
+    },
     {
       name: "Gradient",
       colors: [
@@ -44,6 +90,20 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     setShowAdditionalOptions((prev) => !prev);
   };
 
+  const handleGenerateLogo = () => {
+    // Add your logo generation logic here
+    console.log({
+      apiKey,
+      companyName,
+      selectedLayout,
+      selectedLogoStyle,
+      selectedPrimaryColor,
+      selectedBackgroundColor,
+      selectedColorScheme,
+      additionalInfo,
+    });
+  };
+
   return (
     <div
       className={`sidebar ${className} w-full md:w-[395px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
@@ -56,6 +116,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               [OPTIONAL] ADD YOUR TOGETHER API KEY
             </label>
             <input
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
               className="w-full md:w-[315px] h-[45px] bg-[#343434] border border-[#2C2C2C] rounded px-[12.5px] text-sm text-[#F3F3F3]"
               placeholder="API Key"
               aria-label="API Key"
@@ -70,6 +132,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               Company Name
             </label>
             <input
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
               className="w-full md:w-[315px] h-[43.75px] bg-[#343434] rounded px-[15px] text-sm text-[#F3F3F3]"
               placeholder="Amazon"
               aria-label="Company Name"
@@ -79,14 +143,25 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
           {/* Layout Section */}
           <div className="mb-6">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-2 block flex items-center">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-2 flex items-center">
               Layout
               <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
             <div className="grid grid-cols-3 gap-3">
               {layouts.map((layout) => (
                 <div key={layout.name} className="flex flex-col items-center">
-                  <div className="w-[96px] h-[96px] bg-[#343434] rounded flex items-center justify-center mb-2">
+                  <button
+                    className={`w-[96px] h-[96px] bg-[#343434] rounded flex items-center justify-center mb-2 cursor-pointer focus:outline-none ${
+                      selectedLayout === layout.name
+                        ? "border-2 border-[#F3F3F3]"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedLayout(layout.name)}
+                    tabIndex={0}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && setSelectedLayout(layout.name)
+                    }
+                  >
                     <Image
                       src={layout.icon}
                       alt={layout.name}
@@ -94,8 +169,16 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                       height={96}
                       style={{ objectFit: "contain" }}
                     />
-                  </div>
-                  <span className="text-xs text-[#6F6F6F]">{layout.name}</span>
+                  </button>
+                  <span
+                    className={`text-xs ${
+                      selectedLayout === layout.name
+                        ? "text-white"
+                        : "text-[#6F6F6F]"
+                    }`}
+                  >
+                    {layout.name}
+                  </span>
                 </div>
               ))}
             </div>
@@ -110,7 +193,18 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             <div className="grid grid-cols-3 gap-3">
               {logoStyles.map((style) => (
                 <div key={style.name} className="flex flex-col items-center">
-                  <div className="w-[96px] h-[96px] bg-[#343434] rounded flex items-center justify-center mb-1">
+                  <div
+                    className={`w-[96px] h-[96px] bg-[#343434] rounded flex items-center justify-center mb-1 cursor-pointer ${
+                      selectedLogoStyle === style.name
+                        ? "border-2 border-[#F3F3F3]"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedLogoStyle(style.name)}
+                    tabIndex={0}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && setSelectedLogoStyle(style.name)
+                    }
+                  >
                     <Image
                       src={style.icon}
                       alt={style.name}
@@ -119,7 +213,15 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                       style={{ objectFit: "contain" }}
                     />
                   </div>
-                  <span className="text-xs text-[#6F6F6F]">{style.name}</span>
+                  <span
+                    className={`text-xs ${
+                      selectedLogoStyle === style.name
+                        ? "text-white"
+                        : "text-[#6F6F6F]"
+                    }`}
+                  >
+                    {style.name}
+                  </span>
                 </div>
               ))}
             </div>
@@ -131,20 +233,116 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block">
                 Primary
               </label>
-              <div className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2">
-                <div className="w-4 h-4 bg-[#0F6FFF] rounded-sm mr-2"></div>
-                <span className="text-sm text-[#F3F3F3] flex-grow">Blue</span>
-                <ChevronDown size={20} className="text-[#F3F3F3]" />
+              <div className="relative">
+                <div
+                  className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2 cursor-pointer"
+                  onClick={() =>
+                    setShowPrimaryDropdown((prev: boolean) => !prev)
+                  }
+                  tabIndex={0}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" &&
+                    setShowPrimaryDropdown((prev: boolean) => !prev)
+                  }
+                >
+                  <div
+                    className="w-4 h-4 rounded-sm mr-2"
+                    style={{
+                      backgroundColor: primaryColors.find(
+                        (color) => color.name === selectedPrimaryColor
+                      )?.color,
+                    }}
+                  ></div>
+                  <span className="text-sm text-[#F3F3F3] flex-grow">
+                    {selectedPrimaryColor}
+                  </span>
+                  <ChevronDown size={20} className="text-[#F3F3F3]" />
+                </div>
+                {showPrimaryDropdown && (
+                  <div className="absolute mt-1 w-full bg-[#343434] rounded shadow-lg z-10">
+                    {primaryColors.map((color) => (
+                      <div
+                        key={color.name}
+                        className="flex items-center px-2 py-1 cursor-pointer hover:bg-[#2C2C2C]"
+                        onClick={() => {
+                          setSelectedPrimaryColor(color.name);
+                          setShowPrimaryDropdown(false);
+                        }}
+                        tabIndex={0}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" &&
+                          setSelectedPrimaryColor(color.name)
+                        }
+                      >
+                        <div
+                          className="w-4 h-4 rounded-sm mr-2"
+                          style={{ backgroundColor: color.color }}
+                        ></div>
+                        <span className="text-sm text-[#F3F3F3]">
+                          {color.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex-1">
               <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block">
                 Background
               </label>
-              <div className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2">
-                <div className="w-4 h-4 bg-[#6F6F6F] rounded-sm mr-2"></div>
-                <span className="text-sm text-[#6F6F6F] flex-grow">Random</span>
-                <ChevronDown size={20} className="text-[#F3F3F3]" />
+              <div className="relative">
+                <div
+                  className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2 cursor-pointer"
+                  onClick={() =>
+                    setShowBackgroundDropdown((prev: boolean) => !prev)
+                  }
+                  tabIndex={0}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" &&
+                    setShowBackgroundDropdown((prev: boolean) => !prev)
+                  }
+                >
+                  <div
+                    className="w-4 h-4 rounded-sm mr-2"
+                    style={{
+                      backgroundColor: backgroundColors.find(
+                        (color) => color.name === selectedBackgroundColor
+                      )?.color,
+                    }}
+                  ></div>
+                  <span className="text-sm text-[#F3F3F3] flex-grow">
+                    {selectedBackgroundColor}
+                  </span>
+                  <ChevronDown size={20} className="text-[#F3F3F3]" />
+                </div>
+                {showBackgroundDropdown && (
+                  <div className="absolute mt-1 w-full bg-[#343434] rounded shadow-lg z-10">
+                    {backgroundColors.map((color) => (
+                      <div
+                        key={color.name}
+                        className="flex items-center px-2 py-1 cursor-pointer hover:bg-[#2C2C2C]"
+                        onClick={() => {
+                          setSelectedBackgroundColor(color.name);
+                          setShowBackgroundDropdown(false);
+                        }}
+                        tabIndex={0}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" &&
+                          setSelectedBackgroundColor(color.name)
+                        }
+                      >
+                        <div
+                          className="w-4 h-4 rounded-sm mr-2"
+                          style={{ backgroundColor: color.color }}
+                        ></div>
+                        <span className="text-sm text-[#F3F3F3]">
+                          {color.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -181,7 +379,19 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                         key={scheme.name}
                         className="flex flex-col items-center"
                       >
-                        <div className="w-[95px] h-[95px] bg-[#2C2C2C] border border-[#6A6A6A] rounded-md overflow-hidden mb-1">
+                        <div
+                          className={`w-[95px] h-[95px] bg-[#2C2C2C] border border-[#6A6A6A] rounded-md overflow-hidden mb-1 cursor-pointer ${
+                            selectedColorScheme === scheme.name
+                              ? "border-2 border-[#F3F3F3]"
+                              : ""
+                          }`}
+                          onClick={() => setSelectedColorScheme(scheme.name)}
+                          tabIndex={0}
+                          onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            setSelectedColorScheme(scheme.name)
+                          }
+                        >
                           {scheme.name === "Gradient"
                             ? scheme.colors.map((color, index) => (
                                 <div
@@ -198,7 +408,13 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                                 ></div>
                               ))}
                         </div>
-                        <span className="text-sm text-[#6F6F6F]">
+                        <span
+                          className={`text-sm ${
+                            selectedColorScheme === scheme.name
+                              ? "text-white"
+                              : "text-[#6F6F6F]"
+                          }`}
+                        >
                           {scheme.name}
                         </span>
                       </div>
@@ -212,11 +428,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     Additional Info
                     <Info size={14} className="ml-2 text-[#6F6F6F]" />
                   </label>
-                  <div className="w-full md:w-[315px] h-[87.5px] bg-[#343434] rounded p-3">
-                    <p className="text-sm text-[#6F6F6F]">
-                      A SaaS that makes portfolios with AI
-                    </p>
-                  </div>
+                  <textarea
+                    value={additionalInfo}
+                    onChange={(e) => setAdditionalInfo(e.target.value)}
+                    className="w-full md:w-[315px] h-[87.5px] bg-[#343434] rounded p-3 text-sm text-[#F3F3F3]"
+                    placeholder="Enter additional information"
+                    aria-label="Additional Info"
+                    tabIndex={0}
+                  />
                 </div>
               </div>
             )}
@@ -231,12 +450,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             className="w-full bg-[#F3F3F3] text-[#2C2C2C] py-[12.5px] rounded font-bold text-base flex items-center justify-center"
             aria-label="Generate Logo"
             tabIndex={0}
-            onKeyDown={(e) =>
-              e.key === "Enter" &&
-              {
-                /* Add generate logo functionality here */
-              }
-            }
+            onClick={handleGenerateLogo}
+            onKeyDown={(e) => e.key === "Enter" && handleGenerateLogo()}
           >
             <Image
               src="/generate-icon.svg"
