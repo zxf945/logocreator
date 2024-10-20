@@ -1,19 +1,14 @@
 "use client";
-
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import Image from "next/image";
 
-const Sidebar = () => {
-  const [showAdditionalOptions, setShowAdditionalOptions] = useState(false);
-  const contentRef = useRef(null);
+interface SidebarProps {
+  className?: string;
+}
 
-  useEffect(() => {
-    if (contentRef.current && "style" in contentRef.current) {
-      (contentRef.current as HTMLElement).style.overflowY =
-        showAdditionalOptions ? "auto" : "hidden";
-    }
-  }, [showAdditionalOptions]);
+const Sidebar: React.FC<SidebarProps> = ({ className }) => {
+  const [showAdditionalOptions, setShowAdditionalOptions] = useState(false);
 
   const colorSchemes = [
     { name: "Greyscale", colors: ["#FFFFFF", "#BCBCBC", "#797979", "#333333"] },
@@ -36,7 +31,7 @@ const Sidebar = () => {
     { name: "Stack", icon: "/stack.svg" },
   ];
 
-  const logoOptions = [
+  const logoStyles = [
     { name: "Flashy", icon: "/flashy.svg" },
     { name: "Tech", icon: "/tech.svg" },
     { name: "Modern", icon: "/modern.svg" },
@@ -45,198 +40,222 @@ const Sidebar = () => {
     { name: "Minimal", icon: "/minimal.svg" },
   ];
 
+  const handleToggleAdditionalOptions = () => {
+    setShowAdditionalOptions((prev) => !prev);
+  };
+
   return (
-    <div className="w-[316px] h-[full] bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura">
-      <div className="flex-grow overflow-y-auto p-6">
-        {/* API Key Section */}
-        <div className="mb-6">
-          <label className="text-xs font-jura uppercase text-[#F3F3F3] mb-1 block">
-            [Optional] Add Your Together API Key
-          </label>
-          <div className="w-[252px] h-[36px] bg-[#343434] border border-[#2C2C2C] rounded">
+    <div
+      className={`sidebar ${className} w-full md:w-[316px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
+    >
+      <div className={`flex-grow overflow-y-auto`}>
+        <div className="p-6 pb-0">
+          {/* API Key Section */}
+          <div className="mb-4">
+            <label className="text-xs uppercase text-[#F3F3F3] mb-1 block">
+              [OPTIONAL] ADD YOUR TOGETHER API KEY
+            </label>
             <input
-              className="w-full h-full px-[10px] bg-transparent text-xs text-[#6F6F6F]"
+              className="w-full md:w-[252px] h-[36px] bg-[#343434] border border-[#2C2C2C] rounded px-[10px] text-xs text-[#6F6F6F]"
               placeholder="API Key"
+              aria-label="API Key"
+              tabIndex={0}
             />
           </div>
-        </div>
 
-        {/* Company Name Section */}
-        <div className="mb-[20px]">
-          <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
-            Company Name
-          </label>
-          <div className="w-[252px] h-[35px] bg-[#343434] rounded">
+          {/* Company Name Section */}
+          <div className="mb-4">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-1 block">
+              Company Name
+            </label>
             <input
-              className="w-full h-full px-[12px] bg-transparent text-xs text-[#6F6F6F]"
+              className="w-full md:w-[252px] h-[35px] bg-[#343434] rounded px-[12px] text-xs text-[#6F6F6F]"
               placeholder="Amazon"
+              aria-label="Company Name"
+              tabIndex={0}
             />
           </div>
-        </div>
 
-        {/* Layout Section */}
-        <div className="mb-[20px]">
-          <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block flex items-center">
-            Layout
-            <Info size={11} className="ml-2 text-[#6F6F6F]" />
-          </label>
-          <div className="flex space-x-[11px]">
-            {layouts.map((layout, index) => (
-              <div key={layout.name} className="flex flex-col items-center">
-                <div
-                  className={`w-[77px] h-[77px] bg-[#343434] rounded flex items-center justify-center mb-2 relative ${
-                    index === 2 ? "border border-[#F3F3F3]" : ""
-                  }`}
-                >
-                  <Image
-                    src={layout.icon}
-                    alt={layout.name}
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-                <span
-                  className={`text-xs ${
-                    index === 2 ? "text-[#F3F3F3]" : "text-[#6F6F6F]"
-                  }`}
-                >
-                  {layout.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Logo Style Section */}
-        <div className="mb-[20px]">
-          <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block flex items-center">
-            Logo Option
-            <Info size={11} className="ml-2 text-[#6F6F6F]" />
-          </label>
-          <div className="grid grid-cols-3 gap-x-[11px] gap-y-[27px]">
-            {logoOptions.map((option, index) => (
-              <div key={option.name} className="flex flex-col items-center">
-                <div
-                  className={`w-[77px] h-[77px] bg-[#343434] rounded flex items-center justify-center mb-2 relative ${
-                    index === 5 ? "border border-[#F3F3F3]" : ""
-                  }`}
-                >
-                  <Image
-                    src={option.icon}
-                    alt={option.name}
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-                <span
-                  className={`text-xs ${
-                    index === 5 ? "text-[#F3F3F3]" : "text-[#6F6F6F]"
-                  }`}
-                >
-                  {option.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Color Picker Section */}
-        <div className="flex space-x-3 mb-[20px]">
-          <div className="flex-1">
-            <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
-              Primary
+          {/* Layout Section */}
+          <div className="mb-4">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-1 block flex items-center">
+              Layout
+              <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
-            <div className="w-[120px] h-[35px] bg-[#343434] rounded flex items-center px-2">
-              <div className="w-3 h-3 bg-[#0F6FFF] rounded-sm mr-2"></div>
-              <span className="text-xs text-[#F3F3F3] flex-grow">Blue</span>
-              <ChevronDown size={16} className="text-[#F3F3F3]" />
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
+              {layouts.map((layout, index) => (
+                <div key={layout.name} className="flex flex-col items-center">
+                  <div
+                    className={`w-[77px] h-[77px] bg-[#343434] rounded flex items-center justify-center mb-2 relative ${
+                      index === 2 ? "border border-[#F3F3F3]" : ""
+                    }`}
+                  >
+                    <Image
+                      src={layout.icon}
+                      alt={layout.name}
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                  <span
+                    className={`text-xs ${
+                      index === 2 ? "text-[#F3F3F3]" : "text-[#6F6F6F]"
+                    }`}
+                  >
+                    {layout.name}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex-1">
-            <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
-              Background
+
+          {/* Logo Style Section */}
+          <div className="mb-4">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-1 flex items-center">
+              STYLE
+              <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
-            <div className="w-[120px] h-[35px] bg-[#343434] rounded flex items-center px-2">
-              <div className="w-3 h-3 bg-[#6F6F6F] rounded-sm mr-2"></div>
-              <span className="text-xs text-[#6F6F6F] flex-grow">Random</span>
-              <ChevronDown size={16} className="text-[#F3F3F3]" />
+            <div className="grid grid-cols-3 gap-3">
+              {logoStyles.map((style) => (
+                <div key={style.name} className="flex flex-col items-center">
+                  <div className="w-[77px] h-[77px] bg-[#343434] rounded flex items-center justify-center mb-1">
+                    <Image
+                      src={style.icon}
+                      alt={style.name}
+                      width={77}
+                      height={77}
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                  <span className="text-xs text-[#6F6F6F]">{style.name}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Additional Options Section */}
-        <div className="mb-[166px]">
-          <button
-            className="text-xs text-[#F3F3F3] flex items-center mt-4"
-            onClick={() => setShowAdditionalOptions(!showAdditionalOptions)}
-          >
-            {showAdditionalOptions ? (
-              <ChevronUp size={16} className="mr-1" />
-            ) : (
-              <ChevronDown size={16} className="mr-1" />
-            )}
-            Additional Options
-          </button>
+          {/* Color Picker Section */}
+          <div className="flex flex-col md:flex-row md:space-x-3 mb-[20px]">
+            <div className="flex-1 mb-4 md:mb-0">
+              <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
+                Primary
+              </label>
+              <div className="w-full md:w-[120px] h-[35px] bg-[#343434] rounded flex items-center px-2">
+                <div className="w-3 h-3 bg-[#0F6FFF] rounded-sm mr-2"></div>
+                <span className="text-xs text-[#F3F3F3] flex-grow">Blue</span>
+                <ChevronDown size={16} className="text-[#F3F3F3]" />
+              </div>
+            </div>
+            <div className="flex-1">
+              <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
+                Background
+              </label>
+              <div className="w-full md:w-[120px] h-[35px] bg-[#343434] rounded flex items-center px-2">
+                <div className="w-3 h-3 bg-[#6F6F6F] rounded-sm mr-2"></div>
+                <span className="text-xs text-[#6F6F6F] flex-grow">Random</span>
+                <ChevronDown size={16} className="text-[#F3F3F3]" />
+              </div>
+            </div>
+          </div>
 
-          {showAdditionalOptions && (
-            <div className="mt-4">
-              <div className="mb-4">
-                <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
-                  Color Scheme
-                  <Info size={11} className="ml-2 text-[#6F6F6F]" />
-                </label>
-                <div className="grid grid-cols-3 gap-[11px]">
-                  {colorSchemes.map((scheme) => (
-                    <div
-                      key={scheme.name}
-                      className="flex flex-col items-center"
-                    >
-                      <div className="w-[76px] h-[76px] bg-[#2C2C2C] border border-[#6A6A6A] rounded-md overflow-hidden mb-1">
-                        {scheme.name === "Gradient"
-                          ? scheme.colors.map((color, index) => (
-                              <div
-                                key={index}
-                                className="w-full h-1/3"
-                                style={{ background: color }}
-                              ></div>
-                            ))
-                          : scheme.colors.map((color, index) => (
-                              <div
-                                key={index}
-                                className="w-full h-1/4"
-                                style={{ backgroundColor: color }}
-                              ></div>
-                            ))}
+          {/* Additional Options Section */}
+          <div className="mb-4">
+            <button
+              className="text-xs text-[#F3F3F3] flex items-center w-full"
+              onClick={handleToggleAdditionalOptions}
+              aria-label="Toggle additional options"
+              tabIndex={0}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleToggleAdditionalOptions()
+              }
+            >
+              {showAdditionalOptions ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+              ADDITIONAL OPTIONS
+            </button>
+            {showAdditionalOptions && (
+              <div className="mt-4">
+                {/* Color Scheme Section */}
+                <div className="mb-4">
+                  <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
+                    Color Scheme
+                    <Info size={11} className="ml-2 text-[#6F6F6F]" />
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-[11px]">
+                    {colorSchemes.map((scheme) => (
+                      <div
+                        key={scheme.name}
+                        className="flex flex-col items-center"
+                      >
+                        <div className="w-[76px] h-[76px] bg-[#2C2C2C] border border-[#6A6A6A] rounded-md overflow-hidden mb-1">
+                          {scheme.name === "Gradient"
+                            ? scheme.colors.map((color, index) => (
+                                <div
+                                  key={index}
+                                  className="w-full h-1/3"
+                                  style={{ background: color }}
+                                ></div>
+                              ))
+                            : scheme.colors.map((color, index) => (
+                                <div
+                                  key={index}
+                                  className="w-full h-1/4"
+                                  style={{ backgroundColor: color }}
+                                ></div>
+                              ))}
+                        </div>
+                        <span className="text-xs text-[#6F6F6F]">
+                          {scheme.name}
+                        </span>
                       </div>
-                      <span className="text-xs text-[#6F6F6F]">
-                        {scheme.name}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
-                  Additional Info
-                  <Info size={11} className="ml-2 text-[#6F6F6F]" />
-                </label>
-                <div className="w-[252px] h-[70px] bg-[#343434] rounded p-3">
-                  <p className="text-xs text-[#6F6F6F]">
-                    A SaaS that makes portfolios with AI
-                  </p>
+                {/* Additional Info Section */}
+                <div className="mb-4">
+                  <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
+                    Additional Info
+                    <Info size={11} className="ml-2 text-[#6F6F6F]" />
+                  </label>
+                  <div className="w-full md:w-[252px] h-[70px] bg-[#343434] rounded p-3">
+                    <p className="text-xs text-[#6F6F6F]">
+                      A SaaS that makes portfolios with AI
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+      </div>
 
-        {/* Generate Logo Button */}
+      {/* Generate Logo Button - Always visible */}
+      <div className="px-4">
         <div className="py-2">
-          <button className="w-full bg-[#F3F3F3] text-[#2C2C2C] py-[10px] rounded font-bold text-sm flex items-center justify-center">
+          <button
+            className="w-full bg-[#F3F3F3] text-[#2C2C2C] py-[10px] rounded font-bold text-sm flex items-center justify-center"
+            aria-label="Generate Logo"
+            tabIndex={0}
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              {
+                /* Add generate logo functionality here */
+              }
+            }
+          >
+            <Image
+              src="/generate-icon.svg"
+              alt="Generate Icon"
+              width={13}
+              height={13}
+              className="mr-2"
+            />
             Generate Logo
           </button>
-          <div className="text-center mt-2 text-xs text-[#F3F3F3]">
+          <div className="text-center mt-1 text-xs text-[#F3F3F3]">
             Credits: 3 (renews in 14h)
           </div>
         </div>
