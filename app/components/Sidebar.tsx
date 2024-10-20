@@ -46,30 +46,31 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   return (
     <div
-      className={`sidebar ${className} w-full md:w-[316px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
+      className={`sidebar ${className} w-full md:w-[395px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
     >
       <div className={`flex-grow overflow-y-auto`}>
         <div className="p-6 pb-0">
           {/* API Key Section */}
-          <div className="mb-4">
-            <label className="text-xs uppercase text-[#F3F3F3] mb-1 block">
+          <div className="mb-6">
+            <label className="text-xs uppercase text-[#F3F3F3] mb-2 block">
               [OPTIONAL] ADD YOUR TOGETHER API KEY
             </label>
             <input
-              className="w-full md:w-[252px] h-[36px] bg-[#343434] border border-[#2C2C2C] rounded px-[10px] text-xs text-[#6F6F6F]"
+              className="w-full md:w-[315px] h-[45px] bg-[#343434] border border-[#2C2C2C] rounded px-[12.5px] text-sm text-[#F3F3F3]"
               placeholder="API Key"
               aria-label="API Key"
               tabIndex={0}
             />
           </div>
-
+          {/* Divider Line */}
+          <div className="h-[1px] bg-[#6A6A6A] mb-6"></div>
           {/* Company Name Section */}
-          <div className="mb-4">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-1 block">
+          <div className="mb-6">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-2 block">
               Company Name
             </label>
             <input
-              className="w-full md:w-[252px] h-[35px] bg-[#343434] rounded px-[12px] text-xs text-[#6F6F6F]"
+              className="w-full md:w-[315px] h-[43.75px] bg-[#343434] rounded px-[15px] text-sm text-[#F3F3F3]"
               placeholder="Amazon"
               aria-label="Company Name"
               tabIndex={0}
@@ -77,53 +78,44 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           </div>
 
           {/* Layout Section */}
-          <div className="mb-4">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-1 block flex items-center">
+          <div className="mb-6">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-2 block flex items-center">
               Layout
               <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
-            <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
-              {layouts.map((layout, index) => (
+            <div className="grid grid-cols-3 gap-3">
+              {layouts.map((layout) => (
                 <div key={layout.name} className="flex flex-col items-center">
-                  <div
-                    className={`w-[77px] h-[77px] bg-[#343434] rounded flex items-center justify-center mb-2 relative ${
-                      index === 2 ? "border border-[#F3F3F3]" : ""
-                    }`}
-                  >
+                  <div className="w-[96px] h-[96px] bg-[#343434] rounded flex items-center justify-center mb-2">
                     <Image
                       src={layout.icon}
                       alt={layout.name}
-                      fill
+                      width={96}
+                      height={96}
                       style={{ objectFit: "contain" }}
                     />
                   </div>
-                  <span
-                    className={`text-xs ${
-                      index === 2 ? "text-[#F3F3F3]" : "text-[#6F6F6F]"
-                    }`}
-                  >
-                    {layout.name}
-                  </span>
+                  <span className="text-xs text-[#6F6F6F]">{layout.name}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Logo Style Section */}
-          <div className="mb-4">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-1 flex items-center">
+          <div className="mb-6">
+            <label className="text-xs uppercase text-[#6F6F6F] mb-2 flex items-center">
               STYLE
               <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
             <div className="grid grid-cols-3 gap-3">
               {logoStyles.map((style) => (
                 <div key={style.name} className="flex flex-col items-center">
-                  <div className="w-[77px] h-[77px] bg-[#343434] rounded flex items-center justify-center mb-1">
+                  <div className="w-[96px] h-[96px] bg-[#343434] rounded flex items-center justify-center mb-1">
                     <Image
                       src={style.icon}
                       alt={style.name}
-                      width={77}
-                      height={77}
+                      width={96}
+                      height={96}
                       style={{ objectFit: "contain" }}
                     />
                   </div>
@@ -134,25 +126,25 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           </div>
 
           {/* Color Picker Section */}
-          <div className="flex flex-col md:flex-row md:space-x-3 mb-[20px]">
+          <div className="flex flex-col md:flex-row md:space-x-3 mb-[25px]">
             <div className="flex-1 mb-4 md:mb-0">
-              <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
+              <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block">
                 Primary
               </label>
-              <div className="w-full md:w-[120px] h-[35px] bg-[#343434] rounded flex items-center px-2">
-                <div className="w-3 h-3 bg-[#0F6FFF] rounded-sm mr-2"></div>
-                <span className="text-xs text-[#F3F3F3] flex-grow">Blue</span>
-                <ChevronDown size={16} className="text-[#F3F3F3]" />
+              <div className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2">
+                <div className="w-4 h-4 bg-[#0F6FFF] rounded-sm mr-2"></div>
+                <span className="text-sm text-[#F3F3F3] flex-grow">Blue</span>
+                <ChevronDown size={20} className="text-[#F3F3F3]" />
               </div>
             </div>
             <div className="flex-1">
-              <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-1 block">
+              <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block">
                 Background
               </label>
-              <div className="w-full md:w-[120px] h-[35px] bg-[#343434] rounded flex items-center px-2">
-                <div className="w-3 h-3 bg-[#6F6F6F] rounded-sm mr-2"></div>
-                <span className="text-xs text-[#6F6F6F] flex-grow">Random</span>
-                <ChevronDown size={16} className="text-[#F3F3F3]" />
+              <div className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2">
+                <div className="w-4 h-4 bg-[#6F6F6F] rounded-sm mr-2"></div>
+                <span className="text-sm text-[#6F6F6F] flex-grow">Random</span>
+                <ChevronDown size={20} className="text-[#F3F3F3]" />
               </div>
             </div>
           </div>
@@ -160,7 +152,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           {/* Additional Options Section */}
           <div className="mb-4">
             <button
-              className="text-xs text-[#F3F3F3] flex items-center w-full"
+              className="text-sm text-[#F3F3F3] flex items-center w-full"
               onClick={handleToggleAdditionalOptions}
               aria-label="Toggle additional options"
               tabIndex={0}
@@ -169,9 +161,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               }
             >
               {showAdditionalOptions ? (
-                <ChevronUp size={16} />
+                <ChevronUp size={20} />
               ) : (
-                <ChevronDown size={16} />
+                <ChevronDown size={20} />
               )}
               ADDITIONAL OPTIONS
             </button>
@@ -181,15 +173,15 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                 <div className="mb-4">
                   <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
                     Color Scheme
-                    <Info size={11} className="ml-2 text-[#6F6F6F]" />
+                    <Info size={14} className="ml-2 text-[#6F6F6F]" />
                   </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-[11px]">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-[14px]">
                     {colorSchemes.map((scheme) => (
                       <div
                         key={scheme.name}
                         className="flex flex-col items-center"
                       >
-                        <div className="w-[76px] h-[76px] bg-[#2C2C2C] border border-[#6A6A6A] rounded-md overflow-hidden mb-1">
+                        <div className="w-[95px] h-[95px] bg-[#2C2C2C] border border-[#6A6A6A] rounded-md overflow-hidden mb-1">
                           {scheme.name === "Gradient"
                             ? scheme.colors.map((color, index) => (
                                 <div
@@ -206,7 +198,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                                 ></div>
                               ))}
                         </div>
-                        <span className="text-xs text-[#6F6F6F]">
+                        <span className="text-sm text-[#6F6F6F]">
                           {scheme.name}
                         </span>
                       </div>
@@ -218,10 +210,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                 <div className="mb-4">
                   <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
                     Additional Info
-                    <Info size={11} className="ml-2 text-[#6F6F6F]" />
+                    <Info size={14} className="ml-2 text-[#6F6F6F]" />
                   </label>
-                  <div className="w-full md:w-[252px] h-[70px] bg-[#343434] rounded p-3">
-                    <p className="text-xs text-[#6F6F6F]">
+                  <div className="w-full md:w-[315px] h-[87.5px] bg-[#343434] rounded p-3">
+                    <p className="text-sm text-[#6F6F6F]">
                       A SaaS that makes portfolios with AI
                     </p>
                   </div>
@@ -236,7 +228,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       <div className="px-4">
         <div className="py-2">
           <button
-            className="w-full bg-[#F3F3F3] text-[#2C2C2C] py-[10px] rounded font-bold text-sm flex items-center justify-center"
+            className="w-full bg-[#F3F3F3] text-[#2C2C2C] py-[12.5px] rounded font-bold text-base flex items-center justify-center"
             aria-label="Generate Logo"
             tabIndex={0}
             onKeyDown={(e) =>
@@ -249,8 +241,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             <Image
               src="/generate-icon.svg"
               alt="Generate Icon"
-              width={13}
-              height={13}
+              width={16}
+              height={16}
               className="mr-2"
             />
             Generate Logo
