@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     <div
       className={`sidebar ${className} w-full md:w-[395px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
     >
-      <div className={`flex-grow overflow-y-auto`}>
+      <div className={`flex-grow overflow-y-auto `}>
         <div className="p-6 pb-0">
           {/* API Key Section */}
           <div className="mb-6">
