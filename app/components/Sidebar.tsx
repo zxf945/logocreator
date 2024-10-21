@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import Image from "next/image";
 
@@ -29,6 +29,32 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     useState<boolean>(false);
   const [showBackgroundDropdown, setShowBackgroundDropdown] =
     useState<boolean>(false);
+
+  const primaryDropdownRef = useRef<HTMLDivElement>(null); // Added ref for primary dropdown
+  const backgroundDropdownRef = useRef<HTMLDivElement>(null); // Added ref for background dropdown
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Added click outside handler
+      if (
+        primaryDropdownRef.current &&
+        !primaryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowPrimaryDropdown(false);
+      }
+      if (
+        backgroundDropdownRef.current &&
+        !backgroundDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowBackgroundDropdown(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [primaryDropdownRef, backgroundDropdownRef]);
 
   const primaryColors = [
     { name: "Blue", color: "#0F6FFF" },
@@ -104,6 +130,18 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     });
   };
 
+  const handleToggleLayout = (layoutName: string) => {
+    setSelectedLayout((prev) => (prev === layoutName ? null : layoutName));
+  };
+
+  const handleToggleLogoStyle = (styleName: string) => {
+    setSelectedLogoStyle((prev) => (prev === styleName ? null : styleName));
+  };
+
+  const handleToggleColorScheme = (schemeName: string) => {
+    setSelectedColorScheme((prev) => (prev === schemeName ? null : schemeName));
+  };
+
   return (
     <div
       className={`sidebar ${className} w-full md:w-[395px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
@@ -112,10 +150,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         <div className="p-6 pb-0">
           {/* API Key Section */}
           <div className="mb-6">
-            <label className="text-xs uppercase text-[#F3F3F3] mb-2 block">
+            <label
+              htmlFor="api-key"
+              className="text-xs uppercase text-[#F3F3F3] mb-2 block"
+            >
               [OPTIONAL] ADD YOUR TOGETHER API KEY
             </label>
             <input
+              id="api-key"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               className="w-full md:w-[315px] h-[45px] bg-[#343434] border border-[#2C2C2C] rounded px-[12.5px] text-sm text-[#F3F3F3]"
@@ -128,10 +170,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <div className="h-[1px] bg-[#6A6A6A] mb-6"></div>
           {/* Company Name Section */}
           <div className="mb-6">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-2 block">
+            <label
+              htmlFor="company-name"
+              className="text-xs uppercase text-[#6F6F6F] mb-2 block"
+            >
               Company Name
             </label>
             <input
+              id="company-name"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               className="w-full md:w-[315px] h-[43.75px] bg-[#343434] rounded px-[15px] text-sm text-[#F3F3F3]"
@@ -147,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               Layout
               <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3" role="radiogroup">
               {layouts.map((layout) => (
                 <div key={layout.name} className="flex flex-col items-center">
                   <button
@@ -156,11 +202,13 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                         ? "border-2 border-[#F3F3F3]"
                         : ""
                     }`}
-                    onClick={() => setSelectedLayout(layout.name)}
+                    onClick={() => handleToggleLayout(layout.name)}
                     tabIndex={0}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && setSelectedLayout(layout.name)
-                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleToggleLayout(layout.name);
+                    }}
+                    aria-checked={selectedLayout === layout.name}
+                    role="radio"
                   >
                     <Image
                       src={layout.icon}
@@ -190,7 +238,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               STYLE
               <Info size={11} className="ml-2 text-[#6F6F6F]" />
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3" role="radiogroup">
               {logoStyles.map((style) => (
                 <div key={style.name} className="flex flex-col items-center">
                   <div
@@ -199,11 +247,13 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                         ? "border-2 border-[#F3F3F3]"
                         : ""
                     }`}
-                    onClick={() => setSelectedLogoStyle(style.name)}
+                    onClick={() => handleToggleLogoStyle(style.name)}
                     tabIndex={0}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && setSelectedLogoStyle(style.name)
-                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleToggleLogoStyle(style.name);
+                    }}
+                    aria-checked={selectedLogoStyle === style.name}
+                    role="radio"
                   >
                     <Image
                       src={style.icon}
@@ -230,11 +280,15 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           {/* Color Picker Section */}
           <div className="flex flex-col md:flex-row md:space-x-3 mb-[25px]">
             <div className="flex-1 mb-4 md:mb-0">
-              <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block">
+              <label
+                htmlFor="primary-color"
+                className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block"
+              >
                 Primary
               </label>
-              <div className="relative">
+              <div className="relative" ref={primaryDropdownRef}>
                 <div
+                  id="primary-color"
                   className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2 cursor-pointer"
                   onClick={() =>
                     setShowPrimaryDropdown((prev: boolean) => !prev)
@@ -244,6 +298,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     e.key === "Enter" &&
                     setShowPrimaryDropdown((prev: boolean) => !prev)
                   }
+                  aria-expanded={showPrimaryDropdown}
+                  aria-controls="primary-color-dropdown"
                 >
                   <div
                     className="w-4 h-4 rounded-sm mr-2"
@@ -259,7 +315,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                   <ChevronDown size={20} className="text-[#F3F3F3]" />
                 </div>
                 {showPrimaryDropdown && (
-                  <div className="absolute mt-1 w-full bg-[#343434] rounded shadow-lg z-10">
+                  <div
+                    id="primary-color-dropdown"
+                    className="absolute mt-1 w-full bg-[#343434] rounded shadow-lg z-10"
+                  >
                     {primaryColors.map((color) => (
                       <div
                         key={color.name}
@@ -288,11 +347,15 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               </div>
             </div>
             <div className="flex-1">
-              <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block">
+              <label
+                htmlFor="background-color"
+                className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block"
+              >
                 Background
               </label>
-              <div className="relative">
+              <div className="relative" ref={backgroundDropdownRef}>
                 <div
+                  id="background-color"
                   className="w-full md:w-[150px] h-[43.75px] bg-[#343434] rounded flex items-center px-2 cursor-pointer"
                   onClick={() =>
                     setShowBackgroundDropdown((prev: boolean) => !prev)
@@ -302,6 +365,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     e.key === "Enter" &&
                     setShowBackgroundDropdown((prev: boolean) => !prev)
                   }
+                  aria-expanded={showBackgroundDropdown}
+                  aria-controls="background-color-dropdown"
                 >
                   <div
                     className="w-4 h-4 rounded-sm mr-2"
@@ -317,7 +382,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                   <ChevronDown size={20} className="text-[#F3F3F3]" />
                 </div>
                 {showBackgroundDropdown && (
-                  <div className="absolute mt-1 w-full bg-[#343434] rounded shadow-lg z-10">
+                  <div
+                    id="background-color-dropdown"
+                    className="absolute mt-1 w-full bg-[#343434] rounded shadow-lg z-10"
+                  >
                     {backgroundColors.map((color) => (
                       <div
                         key={color.name}
@@ -357,6 +425,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               onKeyDown={(e) =>
                 e.key === "Enter" && handleToggleAdditionalOptions()
               }
+              aria-expanded={showAdditionalOptions}
             >
               {showAdditionalOptions ? (
                 <ChevronUp size={20} />
@@ -373,7 +442,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     Color Scheme
                     <Info size={14} className="ml-2 text-[#6F6F6F]" />
                   </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-[14px]">
+                  <div
+                    className="grid grid-cols-2 md:grid-cols-3 gap-[14px]"
+                    role="radiogroup"
+                  >
                     {colorSchemes.map((scheme) => (
                       <div
                         key={scheme.name}
@@ -385,12 +457,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                               ? "border-2 border-[#F3F3F3]"
                               : ""
                           }`}
-                          onClick={() => setSelectedColorScheme(scheme.name)}
+                          onClick={() => handleToggleColorScheme(scheme.name)}
                           tabIndex={0}
-                          onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            setSelectedColorScheme(scheme.name)
-                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                              handleToggleColorScheme(scheme.name);
+                          }}
+                          aria-checked={selectedColorScheme === scheme.name}
+                          role="radio"
                         >
                           {scheme.name === "Gradient"
                             ? scheme.colors.map((color, index) => (
@@ -424,11 +498,15 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
                 {/* Additional Info Section */}
                 <div className="mb-4">
-                  <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
+                  <label
+                    htmlFor="additional-info"
+                    className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2"
+                  >
                     Additional Info
                     <Info size={14} className="ml-2 text-[#6F6F6F]" />
                   </label>
                   <textarea
+                    id="additional-info"
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                     className="w-full md:w-[315px] h-[87.5px] bg-[#343434] rounded p-3 text-sm text-[#F3F3F3]"

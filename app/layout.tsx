@@ -22,7 +22,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={`${jura.variable} font-sans antialiased`}>
+      <body className={`${jura.variable} font-jura antialiased`}>
         {children}
       </body>
     </html>

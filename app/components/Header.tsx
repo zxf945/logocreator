@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
         </div>
         {/* Credits Section */}
         <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-300 hidden lg:block">
+          <span className="text-sm text-gray-400 hidden lg:block">
             Credits :
           </span>
           <span className="text-sm font-jura text-gray-300 hidden lg:block">
@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             alt="Insan"
             width={36} // Original width
             height={36} // Original height
-            className="w-10 h-auto bg-gray-600 rounded-full md:w-9" // Increased width for small screens
+            className="w-10 h-auto bg-gray-600 rounded-full border border-black  md:w-9" // Increased width for small screens
           />
         </div>
       </div>
