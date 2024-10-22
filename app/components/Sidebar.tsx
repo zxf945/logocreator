@@ -2,6 +2,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import Image from "next/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../components/ui/tooltip";
 
 interface SidebarProps {
   className?: string;
@@ -142,6 +148,20 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     setSelectedColorScheme((prev) => (prev === schemeName ? null : schemeName));
   };
 
+  // Helper component for consistent tooltip usage
+  const InfoTooltip = ({ content }: { content: string }) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Info size={11} className="ml-2 text-[#6F6F6F] cursor-default" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{content}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+
   return (
     <div
       className={`sidebar ${className} w-full md:w-[395px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
@@ -191,7 +211,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <div className="mb-6">
             <label className="text-xs uppercase text-[#6F6F6F] mb-2 flex items-center">
               Layout
-              <Info size={11} className="ml-2 text-[#6F6F6F]" />
+              <InfoTooltip content="Select a layout for your logo" />
             </label>
             <div className="grid grid-cols-3 gap-3" role="radiogroup">
               {layouts.map((layout) => (
@@ -236,7 +256,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <div className="mb-6">
             <label className="text-xs uppercase text-[#6F6F6F] mb-2 flex items-center">
               STYLE
-              <Info size={11} className="ml-2 text-[#6F6F6F]" />
+              <InfoTooltip content="Choose a style for your logo" />
             </label>
             <div className="grid grid-cols-3 gap-3" role="radiogroup">
               {logoStyles.map((style) => (
@@ -285,6 +305,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                 className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block"
               >
                 Primary
+                {/* <InfoTooltip content="Select a primary color" /> */}
               </label>
               <div className="relative" ref={primaryDropdownRef}>
                 <div
@@ -347,11 +368,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               </div>
             </div>
             <div className="flex-1">
-              <label
-                htmlFor="background-color"
-                className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block"
-              >
+              <label className="text-sm font-bold uppercase text-[#6F6F6F] mb-1 block  items-center">
                 Background
+                {/* <InfoTooltip content="Select a background color" /> */}
               </label>
               <div className="relative" ref={backgroundDropdownRef}>
                 <div
@@ -440,7 +459,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                 <div className="mb-4">
                   <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
                     Color Scheme
-                    <Info size={14} className="ml-2 text-[#6F6F6F]" />
+                    <InfoTooltip content="Choose a color scheme for your logo" />
                   </label>
                   <div
                     className="grid grid-cols-2 md:grid-cols-3 gap-[14px]"
@@ -503,7 +522,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2"
                   >
                     Additional Info
-                    <Info size={14} className="ml-2 text-[#6F6F6F]" />
+                    <InfoTooltip content="Provide any additional information about your logo" />
                   </label>
                   <textarea
                     id="additional-info"
