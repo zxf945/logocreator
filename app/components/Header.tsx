@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             <Image
               src="together-ai-logo1.svg"
               alt="together.ai"
-              width={500} // Increased width
+              width={450} // Increased width
               height={120} // Increased height
               className="pl-0 md:pl-0 lg:pl-28"
             />
@@ -27,18 +27,20 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
         </div>
         {/* Credits Section */}
         <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-400 hidden lg:block">
-            Credits :
-          </span>
-          <span className="text-sm font-jura text-gray-300 hidden lg:block">
-            3
-          </span>
+          <div className="flex items-center">
+            <span className="text-sm text-gray-400 hidden lg:block">
+              Credits:
+            </span>
+            <span className="text-sm font-jura text-gray-300 hidden lg:block ml-0.5">
+              3
+            </span>
+          </div>
           <Image
             src="/insan.png"
             alt="Insan"
             width={36} // Original width
             height={36} // Original height
-            className="w-10 h-auto bg-gray-600 rounded-full border border-black  md:w-9" // Increased width for small screens
+            className="w-10 h-auto bg-gray-600 rounded-full border border-black md:w-9" // Increased width for small screens
           />
         </div>
       </div>
