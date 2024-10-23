@@ -19,8 +19,8 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             <Image
               src="together-ai-logo1.svg"
               alt="together.ai"
-              width={450} // Increased width
-              height={120} // Increased height
+              width={450}
+              height={120}
               className="pl-0 md:pl-0 lg:pl-28"
             />
           </Link>
@@ -38,9 +38,9 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           <Image
             src="/insan.png"
             alt="Insan"
-            width={36} // Original width
-            height={36} // Original height
-            className="w-10 h-auto bg-gray-600 rounded-full border border-black md:w-9" // Increased width for small screens
+            width={36}
+            height={36}
+            className="w-10 h-auto bg-gray-600 rounded-full border border-black md:w-9"
           />
         </div>
       </div>

@@ -1,6 +1,6 @@
-import { GithubIcon } from "lucide-react";
 import React from "react";
 import TwitterSVG from "../../public/twitter.svg";
+import GithubSVG from "../../public/Github.svg";
 import Image from "next/image";
 const Footer = () => (
   <div className="flex flex-col md:flex-row justify-between items-center px-4 py-4 bg-[#343434] font-Jura">
@@ -24,14 +24,14 @@ const Footer = () => (
         href="https://github.com/Nutlope"
         className="text-sm text-[#6F6F6F] px-2 py-1 border border-[#6F6F6F] rounded flex items-center"
       >
-        <GithubIcon className="mr-2" />
+        <Image src={GithubSVG} alt="Twitter" className="mr-1 h-5 w-5" />
         Github
       </a>
       <a
         href="https://x.com/nutlope"
         className="text-sm text-[#6F6F6F] px-2 py-1 border border-[#6F6F6F] rounded flex items-center"
       >
-        <Image src={TwitterSVG} alt="Twitter" className="mr-2 h-4 w-4" />
+        <Image src={TwitterSVG} alt="github" className="mr-1 h-4 w-4" />
         Twitter
       </a>
     </div>
