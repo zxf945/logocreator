@@ -19,7 +19,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        jura: ["Jura", "sans-serif"],
+        jura: ["var(--font-jura)"],
       },
     },
   },
