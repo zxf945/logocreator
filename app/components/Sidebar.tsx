@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, Info, ChevronUp } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import Image from "next/image";
 import {
   Tooltip,
@@ -14,7 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
-  const [showAdditionalOptions, setShowAdditionalOptions] = useState(false);
+  const [showAdditionalOptions] = useState(true);
   const [apiKey, setApiKey] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
@@ -25,9 +25,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     useState<string>("Blue");
   const [selectedBackgroundColor, setSelectedBackgroundColor] =
     useState<string>("Random");
-  const [selectedColorScheme, setSelectedColorScheme] = useState<string | null>(
-    null
-  );
+  // const [selectedColorScheme, setSelectedColorScheme] = useState<string | null>(
+  //   null
+  // );
   const [additionalInfo, setAdditionalInfo] = useState("");
 
   // Added missing state variables
@@ -77,32 +77,32 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { name: "White", color: "#FFFFFF" },
   ];
 
-  const colorSchemes = [
-    {
-      name: "Greyscale",
-      colors: ["#FFFFFF", "#BCBCBC", "#797979", "#333333"],
-    },
-    {
-      name: "Cold",
-      colors: ["#C0FDFC", "#3FDBF0", "#78ACF1", "#10029A"],
-    },
-    {
-      name: "Contrast",
-      colors: ["#FF3992", "#FFD425", "#3F00FF", "#B000FF"],
-    },
-    {
-      name: "Warm",
-      colors: ["#F6E1E1", "#F88020", "#D1284C", "#3E0E1F"],
-    },
-    {
-      name: "Gradient",
-      colors: [
-        "linear-gradient(2.81deg, #4268FD 12.37%, #08A400 103.68%)",
-        "linear-gradient(2.76deg, #FD42A9 10.88%, #A40003 103.73%)",
-        "linear-gradient(3.65deg, #93FD42 -5.41%, #17006A 109.9%)",
-      ],
-    },
-  ];
+  // const colorSchemes = [
+  //   {
+  //     name: "Greyscale",
+  //     colors: ["#FFFFFF", "#BCBCBC", "#797979", "#333333"],
+  //   },
+  //   {
+  //     name: "Cold",
+  //     colors: ["#C0FDFC", "#3FDBF0", "#78ACF1", "#10029A"],
+  //   },
+  //   {
+  //     name: "Contrast",
+  //     colors: ["#FF3992", "#FFD425", "#3F00FF", "#B000FF"],
+  //   },
+  //   {
+  //     name: "Warm",
+  //     colors: ["#F6E1E1", "#F88020", "#D1284C", "#3E0E1F"],
+  //   },
+  //   {
+  //     name: "Gradient",
+  //     colors: [
+  //       "linear-gradient(2.81deg, #4268FD 12.37%, #08A400 103.68%)",
+  //       "linear-gradient(2.76deg, #FD42A9 10.88%, #A40003 103.73%)",
+  //       "linear-gradient(3.65deg, #93FD42 -5.41%, #17006A 109.9%)",
+  //     ],
+  //   },
+  // ];
 
   const layouts = [
     { name: "Solo", icon: "/solo.svg" },
@@ -119,9 +119,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { name: "Minimal", icon: "/minimal.svg" },
   ];
 
-  const handleToggleAdditionalOptions = () => {
-    setShowAdditionalOptions((prev) => !prev);
-  };
+  // const handleToggleAdditionalOptions = () => {
+  //   setShowAdditionalOptions((prev) => !prev);
+  // };
 
   const handleGenerateLogo = async () => {
     setIsLoading(true); // Set loading state to true
@@ -134,7 +134,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       selectedLogoStyle,
       selectedPrimaryColor,
       selectedBackgroundColor,
-      selectedColorScheme,
+      // selectedColorScheme,
       additionalInfo,
     });
     setIsLoading(false); // Reset loading state
@@ -148,9 +148,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     setSelectedLogoStyle((prev) => (prev === styleName ? null : styleName));
   };
 
-  const handleToggleColorScheme = (schemeName: string) => {
-    setSelectedColorScheme((prev) => (prev === schemeName ? null : schemeName));
-  };
+  // const handleToggleColorScheme = (schemeName: string) => {
+  //   setSelectedColorScheme((prev) => (prev === schemeName ? null : schemeName));
+  // };
 
   // Helper component for consistent tooltip usage
   const InfoTooltip = ({ content }: { content: string }) => (
@@ -176,9 +176,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <div className="mb-6">
             <label
               htmlFor="api-key"
-              className="text-xs uppercase text-[#F3F3F3] mb-2 block"
+              className="text-xs uppercase font-bold text-[#F3F3F3] mb-2 block"
             >
-              ADD YOUR TOGETHER API KEY
+              TOGETHER API KEY
               <span className="text-xs uppercase text-[#6F6F6F] ml-2">
                 [OPTIONAL]
               </span>
@@ -194,12 +194,12 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             />
           </div>
           {/* Divider Line */}
-          <div className="h-[1px] bg-[#6A6A6A] mb-6"></div>
+          <div className="h-px w-[calc(100%+48px)] bg-[#6A6A6A] -mx-6 mb-6"></div>
           {/* Company Name Section */}
           <div className="mb-6">
             <label
               htmlFor="company-name"
-              className="text-xs uppercase text-[#6F6F6F] mb-2 block"
+              className="text-xs uppercase font-bold text-[#6F6F6F] mb-2 block"
             >
               Company Name
             </label>
@@ -215,7 +215,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           </div>
           {/* Layout Section */}
           <div className="mb-6">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-2 flex items-center">
+            <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-2 flex items-center">
               Layout
               <InfoTooltip content="Select a layout for your logo" />
             </label>
@@ -259,7 +259,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           </div>
           {/* Logo Style Section */}
           <div className="mb-6">
-            <label className="text-xs uppercase text-[#6F6F6F] mb-2 flex items-center">
+            <label className="text-xs font-bold uppercase text-[#6F6F6F] mb-2 flex items-center">
               STYLE
               <InfoTooltip content="Choose a style for your logo" />
             </label>
@@ -438,8 +438,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             </div>
           </div>
           {/* Additional Options Section */}
-          <div className="mb-4">
-            <button
+          <div className="mb-1">
+            {/* <button
               className="text-sm text-[#F3F3F3] flex items-center w-full"
               onClick={handleToggleAdditionalOptions}
               aria-label="Toggle additional options"
@@ -455,11 +455,11 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                 <ChevronDown size={20} />
               )}
               ADDITIONAL OPTIONS
-            </button>
+            </button> */}
             {showAdditionalOptions && (
-              <div className="mt-4">
+              <div className="mt-1">
                 {/* Color Scheme Section */}
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2">
                     Color Scheme
                     <InfoTooltip content="Choose a color scheme for your logo" />
@@ -516,10 +516,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Additional Info Section */}
-                <div className="mb-4">
+                <div className="mb-1">
                   <label
                     htmlFor="additional-info"
                     className="text-xs font-bold uppercase text-[#6F6F6F] flex items-center mb-2"
@@ -531,7 +531,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     id="additional-info"
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
-                    className="w-full md:w-[315px] h-[87.5px] bg-[#343434] rounded p-3 text-sm text-[#F3F3F3]"
+                    className="w-full md:w-[315px] h-[67.5px] bg-[#343434] rounded p-3 text-xs text-[#F3F3F3]"
                     placeholder="Enter additional information"
                     aria-label="Additional Info"
                     tabIndex={0}
@@ -568,9 +568,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             {isLoading ? "Loading..." : "Generate Logo"}{" "}
             {/* Change button text */}
           </button>
-          <div className="text-center mt-1 text-xs text-[#F3F3F3]">
-            Credits: 3 (renews in 14h)
-          </div>
+          {/* <div className="text-center mt-1 text-xs text-[#F3F3F3]">
+            Credits: 3
+          </div> */}
         </div>
       </div>
     </div>
