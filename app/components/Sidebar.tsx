@@ -171,7 +171,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       className={`sidebar ${className} w-full md:w-[395px] h-screen bg-[#2C2C2C] text-[#F3F3F3] flex flex-col font-jura`}
     >
       <div className={`flex-grow overflow-y-auto `}>
-        <div className="p-6 pb-0">
+        <div className="px-8 md:px-6 pb-0 pt-4 md:pt-6">
           {/* API Key Section */}
           <div className="mb-6">
             <label
@@ -531,7 +531,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     id="additional-info"
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
-                    className="w-full md:w-[315px] h-[67.5px] bg-[#343434] rounded p-3 text-xs text-[#F3F3F3]"
+                    className="w-full md:w-[315px] h-[67.5px] bg-[#343434] rounded p-3 text-[12px] text-[#F3F3F3]"
                     placeholder="Enter additional information"
                     aria-label="Additional Info"
                     tabIndex={0}
@@ -544,7 +544,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       </div>
 
       {/* Generate Logo Button - Always visible */}
-      <div className="px-4">
+      <div className="px-8 md:px-4">
         <div className="py-2">
           <button
             className="w-full bg-[#F3F3F3] text-[#2C2C2C] py-[12.5px] rounded font-bold text-base flex items-center justify-center"
