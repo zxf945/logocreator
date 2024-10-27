@@ -505,7 +505,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                               ))}
                         </div>
                         <span
-                          className={`text-sm ${
+                          className={`text-xs ${
                             selectedColorScheme === scheme.name
                               ? "text-white"
                               : "text-[#6F6F6F]"
