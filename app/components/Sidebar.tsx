@@ -194,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             />
           </div>
           {/* Divider Line */}
-          <div className="h-px w-[calc(100%+48px)] bg-[#6A6A6A] -mx-6 mb-6"></div>
+          <div className="h-px w-[calc(100%+48px)] bg-[#343434] -mx-6 mb-6"></div>
           {/* Company Name Section */}
           <div className="mb-6">
             <label
@@ -531,7 +531,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
                     id="additional-info"
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
-                    className="w-full md:w-[315px] h-[67.5px] bg-[#343434] rounded p-3 text-[12px] text-[#F3F3F3]"
+                    className="w-full md:w-[315px] h-[67.5px] bg-[#343434] rounded p-3 text-sm text-[#F3F3F3]"
                     placeholder="Enter additional information"
                     aria-label="Additional Info"
                     tabIndex={0}
