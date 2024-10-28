@@ -19,7 +19,7 @@ const Footer = () => (
         </a>
       </span>
     </div>
-    <div className="flex space-x-3">
+    <div className="flex space-x-3 mb-2 md:mb-0">
       <a
         href="https://github.com/Nutlope"
         className="text-sm text-[#6F6F6F] px-2 py-1 border border-[#6F6F6F] rounded flex items-center"
