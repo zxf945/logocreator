@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import LogoPlaceholder from "./components/LogoPlaceholder";
 import Footer from "./components/footer";
+import { toast } from "@/hooks/use-toast";
 
 export default function Page() {
   const [apiKey, setApiKey] = useState("");
@@ -105,10 +106,18 @@ export default function Page() {
       }),
     });
 
-    const json = await res.json();
+    if (res.status === 429) {
+      toast({
+        variant: "destructive",
+        title: "No requests left!",
+        description: "Please add your own API key or try again in 24h.",
+      });
+    } else {
+      const json = await res.json();
+      setGeneratedImage(`data:image/png;base64,${json.b64_json}`);
+    }
 
-    setGeneratedImage(`data:image/png;base64,${json.b64_json}`);
-    setIsLoading(false); // Reset loading state
+    setIsLoading(false);
   }
 
   return (
@@ -121,7 +130,7 @@ export default function Page() {
             setGeneratedImage("");
             generateLogo();
           }}
-          className="sidebar flex h-full w-full flex-col bg-[#2C2C2C] font-jura text-[#F3F3F3] md:w-auto"
+          className="sidebar flex h-full w-full flex-col bg-[#2C2C2C] text-[#F3F3F3] md:w-auto"
         >
           <div className={`flex-grow overflow-y-auto`}>
             <div className="px-8 pb-0 pt-4 md:px-6 md:pt-6">

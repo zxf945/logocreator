@@ -3,8 +3,8 @@ import TwitterSVG from "../../public/twitter.svg";
 import GithubSVG from "../../public/Github.svg";
 import Image from "next/image";
 const Footer = () => (
-  <div className="flex flex-col md:flex-row justify-between items-center px-4 py-4 bg-[#343434] font-Jura">
-    <div className="flex-grow text-center mb-2 md:mb-0 pl-0 md:pl-0 lg:pl-48">
+  <div className="flex flex-col items-center justify-between bg-[#343434] px-4 py-4 md:flex-row">
+    <div className="mb-2 flex-grow pl-0 text-center md:mb-0 md:pl-0 lg:pl-48">
       <span className="text-sm text-[#6F6F6F]">
         Powered by{" "}
         <a href="https://www.together.ai/" className="underline">
@@ -19,17 +19,17 @@ const Footer = () => (
         </a>
       </span>
     </div>
-    <div className="flex space-x-3 mb-2 md:mb-0">
+    <div className="mb-2 flex space-x-3 md:mb-0">
       <a
         href="https://github.com/Nutlope"
-        className="text-sm text-[#6F6F6F] px-2 py-1 border border-[#6F6F6F] rounded flex items-center"
+        className="flex items-center rounded border border-[#6F6F6F] px-2 py-1 text-sm text-[#6F6F6F]"
       >
         <Image src={GithubSVG} alt="Twitter" className="mr-1 h-5 w-5" />
         Github
       </a>
       <a
         href="https://x.com/nutlope"
-        className="text-sm text-[#6F6F6F] px-2 py-1 border border-[#6F6F6F] rounded flex items-center"
+        className="flex items-center rounded border border-[#6F6F6F] px-2 py-1 text-sm text-[#6F6F6F]"
       >
         <Image src={TwitterSVG} alt="github" className="mr-1 h-4 w-4" />
         Twitter

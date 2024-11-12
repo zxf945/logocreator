@@ -1,22 +1,23 @@
 import dedent from "dedent";
 import Together from "together-ai";
 import { z } from "zod";
-// import { Ratelimit } from "@upstash/ratelimit";
-// import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import { headers } from "next/headers";
 // import { headers } from "next/headers";
 
-// let ratelimit: Ratelimit | undefined;
+let ratelimit: Ratelimit | undefined;
 
 // Add rate limiting if Upstash API keys are set, otherwise skip
-// if (process.env.UPSTASH_REDIS_REST_URL) {
-//   ratelimit = new Ratelimit({
-//     redis: Redis.fromEnv(),
-//     // Allow 100 requests per day (~5-10 prompts)
-//     limiter: Ratelimit.fixedWindow(100, "1440 m"),
-//     analytics: true,
-//     prefix: "blinkshot",
-//   });
-// }
+if (process.env.UPSTASH_REDIS_REST_URL) {
+  ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    // Allow 100 requests per day (~5-10 prompts)
+    limiter: Ratelimit.fixedWindow(2, "1440 m"),
+    analytics: true,
+    prefix: "logocreator",
+  });
+}
 
 export async function POST(req: Request) {
   const json = await req.json();
@@ -47,19 +48,20 @@ export async function POST(req: Request) {
   //   client.apiKey = userAPIKey;
   // }
 
-  // if (ratelimit && !userAPIKey) {
-  //   const identifier = getIPAddress();
+  if (ratelimit) {
+    const identifier = getIPAddress();
+    console.log(identifier);
 
-  //   const { success } = await ratelimit.limit(identifier);
-  //   if (!success) {
-  //     return Response.json(
-  //       "No requests left. Please add your own API key or try again in 24h.",
-  //       {
-  //         status: 429,
-  //       },
-  //     );
-  //   }
-  // }
+    const { success } = await ratelimit.limit(identifier);
+    if (!success) {
+      return Response.json(
+        "No requests left. Please add your own API key or try again in 24h.",
+        {
+          status: 429,
+        },
+      );
+    }
+  }
 
   const prompt = dedent`Design a professional, unique, and memorable logo for a company that effectively represents the brand's identity and values. The logo should be versatile for use across various mediums and sizes, maintaining clarity and impact in both digital and print formats.
 
@@ -120,13 +122,13 @@ export async function POST(req: Request) {
 
 export const runtime = "edge";
 
-// function getIPAddress() {
-//   const FALLBACK_IP_ADDRESS = '0.0.0.0';
-//   const forwardedFor = headers().get('x-forwarded-for');
+function getIPAddress() {
+  const FALLBACK_IP_ADDRESS = "0.0.0.0";
+  const forwardedFor = headers().get("x-forwarded-for");
 
-//   if (forwardedFor) {
-//     return forwardedFor.split(',')[0] ?? FALLBACK_IP_ADDRESS;
-//   }
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0] ?? FALLBACK_IP_ADDRESS;
+  }
 
-//   return headers().get('x-real-ip') ?? FALLBACK_IP_ADDRESS;
-// }
+  return headers().get("x-real-ip") ?? FALLBACK_IP_ADDRESS;
+}
