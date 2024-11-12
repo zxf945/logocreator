@@ -20,9 +20,8 @@ export default function Page() {
   const [apiKey, setApiKey] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [selectedLayout, setSelectedLayout] = useState("Solo");
-  const [selectedLogoStyle, setSelectedLogoStyle] = useState("Flashy");
-  const [selectedPrimaryColor, setSelectedPrimaryColor] =
-    useState<string>("Blue");
+  const [selectedStyle, setSelectedStyle] = useState("Flashy");
+  const [selectedPrimaryColor, setSelectedPrimaryColor] = useState("Blue");
   const [selectedBackgroundColor, setSelectedBackgroundColor] =
     useState("Black");
   const [additionalInfo, setAdditionalInfo] = useState("");
@@ -99,7 +98,7 @@ export default function Page() {
         apiKey,
         companyName,
         selectedLayout,
-        selectedLogoStyle,
+        selectedStyle,
         selectedPrimaryColor,
         selectedBackgroundColor,
         additionalInfo,
@@ -183,26 +182,23 @@ export default function Page() {
                   <InfoTooltip content="Select a layout for your logo" />
                 </label>
                 <div className="grid grid-cols-3 gap-3" role="radiogroup">
-                  {layouts.map((layout) => (
-                    <div
-                      key={layout.name}
-                      className="flex flex-col items-center"
-                    >
+                  {layouts.map((l) => (
+                    <div key={l.name} className="flex flex-col items-center">
                       <button
                         className={`mb-2 flex h-[96px] w-[96px] cursor-pointer items-center justify-center rounded bg-[#343434] focus:outline-none ${
-                          selectedLayout === layout.name
+                          selectedLayout === l.name
                             ? "border-2 border-[#F3F3F3]"
                             : ""
                         }`}
-                        onClick={() => setSelectedLayout(layout.name)}
+                        onClick={() => setSelectedLayout(l.name)}
                         tabIndex={0}
                         type="button"
-                        aria-checked={selectedLayout === layout.name}
+                        aria-checked={selectedLayout === l.name}
                         role="radio"
                       >
                         <Image
-                          src={layout.icon}
-                          alt={layout.name}
+                          src={l.icon}
+                          alt={l.name}
                           width={96}
                           height={96}
                           style={{ objectFit: "contain" }}
@@ -210,12 +206,12 @@ export default function Page() {
                       </button>
                       <span
                         className={`text-xs ${
-                          selectedLayout === layout.name
+                          selectedLayout === l.name
                             ? "text-white"
                             : "text-[#6F6F6F]"
                         }`}
                       >
-                        {layout.name}
+                        {l.name}
                       </span>
                     </div>
                   ))}
@@ -235,13 +231,13 @@ export default function Page() {
                     >
                       <div
                         className={`mb-1 flex h-[96px] w-[96px] cursor-pointer items-center justify-center rounded bg-[#343434] ${
-                          selectedLogoStyle === style.name
+                          selectedStyle === style.name
                             ? "border-2 border-[#F3F3F3]"
                             : ""
                         }`}
-                        onClick={() => setSelectedLogoStyle(style.name)}
+                        onClick={() => setSelectedStyle(style.name)}
                         tabIndex={0}
-                        aria-checked={selectedLogoStyle === style.name}
+                        aria-checked={selectedStyle === style.name}
                         role="radio"
                       >
                         <Image
@@ -254,7 +250,7 @@ export default function Page() {
                       </div>
                       <span
                         className={`text-xs ${
-                          selectedLogoStyle === style.name
+                          selectedStyle === style.name
                             ? "text-white"
                             : "text-[#6F6F6F]"
                         }`}
@@ -477,12 +473,16 @@ export default function Page() {
                   />
 
                   <div className="absolute -right-12 top-0 flex flex-col gap-2">
-                    <Button size="icon" asChild>
+                    <Button size="icon" variant="secondary" asChild>
                       <a href={generatedImage} download="logo.png">
                         <DownloadIcon />
                       </a>
                     </Button>
-                    <Button size="icon" onClick={generateLogo}>
+                    <Button
+                      size="icon"
+                      onClick={generateLogo}
+                      variant="secondary"
+                    >
                       <Spinner loading={isLoading}>
                         <RefreshCwIcon />
                       </Spinner>

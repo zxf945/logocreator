@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     .object({
       companyName: z.string(),
       selectedLayout: z.string(),
-      selectedLogoStyle: z.string(),
+      selectedStyle: z.string(),
       selectedPrimaryColor: z.string(),
       selectedBackgroundColor: z.string(),
       additionalInfo: z.string().optional(),
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
   Here are the details:
 
   Company name: ${data.companyName}
-  Style: ${data.selectedLogoStyle}
+  Style: ${data.selectedStyle}
   Primary color: ${data.selectedPrimaryColor} 
   Background color: ${data.selectedBackgroundColor}
 
