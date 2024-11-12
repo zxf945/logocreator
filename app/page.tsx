@@ -69,7 +69,6 @@ export default function Page() {
   ];
 
   const backgroundColors = [
-    { name: "Random", color: "#6F6F6F" },
     { name: "Gray", color: "#CCCCCC" },
     { name: "Black", color: "#000000" },
     { name: "White", color: "#FFFFFF" },
@@ -458,11 +457,14 @@ export default function Page() {
               {generatedImage ? (
                 <>
                   <Image
-                    className={isLoading ? "animate-pulse" : ""}
+                    className={`${isLoading ? "animate-pulse" : ""}`}
                     width={512}
                     height={512}
                     src={generatedImage}
                     alt=""
+                  />
+                  <div
+                    className={`pointer-events-none absolute inset-0 transition ${isLoading ? "bg-black/50 duration-500" : "bg-black/0 duration-0"}`}
                   />
 
                   <div className="absolute -right-12 top-0 flex flex-col gap-2">
