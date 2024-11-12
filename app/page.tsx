@@ -3,91 +3,69 @@
 import Spinner from "@/app/components/Spinner";
 import { Button } from "@/app/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ChevronDown, DownloadIcon, Info, RefreshCwIcon } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { DownloadIcon, Info, RefreshCwIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import LogoPlaceholder from "./components/LogoPlaceholder";
 import Footer from "./components/footer";
-import { toast } from "@/hooks/use-toast";
+
+const layouts = [
+  { name: "Solo", icon: "/solo.svg" },
+  { name: "Side", icon: "/side.svg" },
+  { name: "Stack", icon: "/stack.svg" },
+];
+
+const logoStyles = [
+  { name: "Flashy", icon: "/flashy.svg" },
+  { name: "Tech", icon: "/tech.svg" },
+  { name: "Modern", icon: "/modern.svg" },
+  { name: "Playful", icon: "/playful.svg" },
+  { name: "Abstract", icon: "/abstract.svg" },
+  { name: "Minimal", icon: "/minimal.svg" },
+];
+
+const primaryColors = [
+  { name: "Blue", color: "#0F6FFF" },
+  { name: "Red", color: "#FF0000" },
+  { name: "Green", color: "#00FF00" },
+  { name: "Yellow", color: "#FFFF00" },
+];
+
+const backgroundColors = [
+  { name: "Gray", color: "#CCCCCC" },
+  { name: "Black", color: "#000000" },
+  { name: "White", color: "#FFFFFF" },
+];
 
 export default function Page() {
   const [apiKey, setApiKey] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [selectedLayout, setSelectedLayout] = useState("Solo");
-  const [selectedStyle, setSelectedStyle] = useState("Flashy");
-  const [selectedPrimaryColor, setSelectedPrimaryColor] = useState("Blue");
-  const [selectedBackgroundColor, setSelectedBackgroundColor] =
-    useState("Black");
+  const [selectedLayout, setSelectedLayout] = useState(layouts[0].name);
+  const [selectedStyle, setSelectedStyle] = useState(logoStyles[0].name);
+  const [selectedPrimaryColor, setSelectedPrimaryColor] = useState(
+    primaryColors[0].name,
+  );
+  const [selectedBackgroundColor, setSelectedBackgroundColor] = useState(
+    backgroundColors[0].name,
+  );
   const [additionalInfo, setAdditionalInfo] = useState("");
-
-  // Added missing state variables
-  const [showPrimaryDropdown, setShowPrimaryDropdown] =
-    useState<boolean>(false);
-  const [showBackgroundDropdown, setShowBackgroundDropdown] =
-    useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Added loading state
-
-  const primaryDropdownRef = useRef<HTMLDivElement>(null); // Added ref for primary dropdown
-  const backgroundDropdownRef = useRef<HTMLDivElement>(null); // Added ref for background dropdown
-
+  const [isLoading, setIsLoading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState("");
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      // Added click outside handler
-      if (
-        primaryDropdownRef.current &&
-        !primaryDropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowPrimaryDropdown(false);
-      }
-      if (
-        backgroundDropdownRef.current &&
-        !backgroundDropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowBackgroundDropdown(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [primaryDropdownRef, backgroundDropdownRef]);
-
-  const primaryColors = [
-    { name: "Blue", color: "#0F6FFF" },
-    { name: "Red", color: "#FF0000" },
-    { name: "Green", color: "#00FF00" },
-    { name: "Yellow", color: "#FFFF00" },
-  ];
-
-  const backgroundColors = [
-    { name: "Gray", color: "#CCCCCC" },
-    { name: "Black", color: "#000000" },
-    { name: "White", color: "#FFFFFF" },
-  ];
-
-  const layouts = [
-    { name: "Solo", icon: "/solo.svg" },
-    { name: "Side", icon: "/side.svg" },
-    { name: "Stack", icon: "/stack.svg" },
-  ] as const;
-
-  const logoStyles = [
-    { name: "Flashy", icon: "/flashy.svg" },
-    { name: "Tech", icon: "/tech.svg" },
-    { name: "Modern", icon: "/modern.svg" },
-    { name: "Playful", icon: "/playful.svg" },
-    { name: "Abstract", icon: "/abstract.svg" },
-    { name: "Minimal", icon: "/minimal.svg" },
-  ];
 
   async function generateLogo() {
     setIsLoading(true);
@@ -264,137 +242,62 @@ export default function Page() {
               {/* Color Picker Section */}
               <div className="mb-[25px] flex flex-col md:flex-row md:space-x-3">
                 <div className="mb-4 flex-1 md:mb-0">
-                  <label
-                    htmlFor="primary-color"
-                    className="mb-1 block text-xs font-bold uppercase text-[#6F6F6F]"
-                  >
+                  <label className="mb-1 block text-xs font-bold uppercase text-[#6F6F6F]">
                     Primary
-                    {/* <InfoTooltip content="Select a primary color" /> */}
                   </label>
-                  <div className="relative" ref={primaryDropdownRef}>
-                    <div
-                      id="primary-color"
-                      className="flex h-[43.75px] w-full cursor-pointer items-center rounded bg-[#343434] px-2 md:w-[150px]"
-                      onClick={() =>
-                        setShowPrimaryDropdown((prev: boolean) => !prev)
-                      }
-                      tabIndex={0}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" &&
-                        setShowPrimaryDropdown((prev: boolean) => !prev)
-                      }
-                      aria-expanded={showPrimaryDropdown}
-                      aria-controls="primary-color-dropdown"
-                    >
-                      <div
-                        className="mr-2 h-4 w-4 rounded-sm"
-                        style={{
-                          backgroundColor: primaryColors.find(
-                            (color) => color.name === selectedPrimaryColor,
-                          )?.color,
-                        }}
-                      ></div>
-                      <span className="flex-grow text-sm text-[#F3F3F3]">
-                        {selectedPrimaryColor}
-                      </span>
-                      <ChevronDown size={20} className="text-[#F3F3F3]" />
-                    </div>
-                    {showPrimaryDropdown && (
-                      <div
-                        id="primary-color-dropdown"
-                        className="absolute z-10 mt-1 w-full rounded bg-[#343434] shadow-lg"
-                      >
+
+                  <Select
+                    value={selectedPrimaryColor}
+                    onValueChange={setSelectedPrimaryColor}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a fruit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
                         {primaryColors.map((color) => (
-                          <div
-                            key={color.name}
-                            className="flex cursor-pointer items-center px-2 py-1 hover:bg-[#2C2C2C]"
-                            onClick={() => {
-                              setSelectedPrimaryColor(color.name);
-                              setShowPrimaryDropdown(false);
-                            }}
-                            tabIndex={0}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" &&
-                              setSelectedPrimaryColor(color.name)
-                            }
-                          >
-                            <div
-                              className="mr-2 h-4 w-4 rounded-sm"
-                              style={{ backgroundColor: color.color }}
-                            ></div>
-                            <span className="text-sm text-[#F3F3F3]">
+                          <SelectItem key={color.color} value={color.name}>
+                            <span className="flex items-center">
+                              <span
+                                style={{ backgroundColor: color.color }}
+                                className="mr-2 size-4 rounded-sm bg-white"
+                              />
                               {color.name}
                             </span>
-                          </div>
+                          </SelectItem>
                         ))}
-                      </div>
-                    )}
-                  </div>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="flex-1">
                   <label className="mb-1 block items-center text-xs font-bold uppercase text-[#6F6F6F]">
                     Background
-                    {/* <InfoTooltip content="Select a background color" /> */}
                   </label>
-                  <div className="relative" ref={backgroundDropdownRef}>
-                    <div
-                      id="background-color"
-                      className="flex h-[43.75px] w-full cursor-pointer items-center rounded bg-[#343434] px-2 md:w-[150px]"
-                      onClick={() =>
-                        setShowBackgroundDropdown((prev: boolean) => !prev)
-                      }
-                      tabIndex={0}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" &&
-                        setShowBackgroundDropdown((prev: boolean) => !prev)
-                      }
-                      aria-expanded={showBackgroundDropdown}
-                      aria-controls="background-color-dropdown"
-                    >
-                      <div
-                        className="mr-2 h-4 w-4 rounded-sm"
-                        style={{
-                          backgroundColor: backgroundColors.find(
-                            (color) => color.name === selectedBackgroundColor,
-                          )?.color,
-                        }}
-                      ></div>
-                      <span className="flex-grow text-sm text-[#F3F3F3]">
-                        {selectedBackgroundColor}
-                      </span>
-                      <ChevronDown size={20} className="text-[#F3F3F3]" />
-                    </div>
-                    {showBackgroundDropdown && (
-                      <div
-                        id="background-color-dropdown"
-                        className="absolute z-10 mt-1 w-full rounded bg-[#343434] shadow-lg"
-                      >
+
+                  <Select
+                    value={selectedBackgroundColor}
+                    onValueChange={setSelectedBackgroundColor}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a fruit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
                         {backgroundColors.map((color) => (
-                          <div
-                            key={color.name}
-                            className="flex cursor-pointer items-center px-2 py-1 hover:bg-[#2C2C2C]"
-                            onClick={() => {
-                              setSelectedBackgroundColor(color.name);
-                              setShowBackgroundDropdown(false);
-                            }}
-                            tabIndex={0}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" &&
-                              setSelectedBackgroundColor(color.name)
-                            }
-                          >
-                            <div
-                              className="mr-2 h-4 w-4 rounded-sm"
-                              style={{ backgroundColor: color.color }}
-                            ></div>
-                            <span className="text-sm text-[#F3F3F3]">
+                          <SelectItem key={color.color} value={color.name}>
+                            <span className="flex items-center">
+                              <span
+                                style={{ backgroundColor: color.color }}
+                                className="mr-2 size-4 rounded-sm bg-white"
+                              />
                               {color.name}
                             </span>
-                          </div>
+                          </SelectItem>
                         ))}
-                      </div>
-                    )}
-                  </div>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               {/* Additional Options Section */}
