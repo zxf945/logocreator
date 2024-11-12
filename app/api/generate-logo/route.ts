@@ -24,10 +24,17 @@ export async function POST(req: Request) {
     .object({
       companyName: z.string(),
       selectedLayout: z.enum(["Solo", "Side", "Stack"]),
-      // selectedLogoStyle: z.string(),
-      // selectedPrimaryColor: z.string(),
-      // selectedBackgroundColor: z.string(),
-      // additionalInfo: z.string(),
+      selectedLogoStyle: z.enum([
+        "Flashy",
+        "Tech",
+        "Modern",
+        "Playful",
+        "Abstract",
+        "Minimal",
+      ]),
+      selectedPrimaryColor: z.enum(["Blue", "Red", "Green", "Yellow"]),
+      selectedBackgroundColor: z.enum(["Random", "Gray", "Black", "White"]),
+      additionalInfo: z.string().optional(),
     })
     .parse(json);
 
@@ -63,19 +70,31 @@ export async function POST(req: Request) {
 
   const prompt = dedent`Design a professional, unique, and memorable logo for a company that effectively represents the brand's identity and values. The logo should be versatile for use across various mediums and sizes, maintaining clarity and impact in both digital and print formats.
 
-  Here are the company details:
+  Here are the details:
 
   Company name: ${data.companyName}
+  Style: ${data.selectedLogoStyle}
+  Primary color: ${data.selectedPrimaryColor} 
+  Background color: ${data.selectedBackgroundColor}
 
+  ${
+    data.additionalInfo
+      ? `Here's some additional information to help guide your design: ${data.additionalInfo}`
+      : ""
+  }
   ${
     data.selectedLayout === "Solo"
       ? `Focus solely on creating a minimalist icon or symbol without any accompanying text whatsoever. COMPANY NAME NOT INCLUDED.`
       : ""
   }
-
   ${
     data.selectedLayout === "Side"
       ? `Have the company name placed to the right of logo you generate. Ensure the text and icon are well-aligned for visual balance.`
+      : ""
+  }
+  ${
+    data.selectedLayout === "Stack"
+      ? `Have the company name positioned directly underneath the icon or symbol. Ensure vertical alignment with equal emphasis on both text and symbol for a balanced, clean layout.`
       : ""
   }
   `;
