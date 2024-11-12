@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import { Jura } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Jura } from 'next/font/google';
+import './globals.css';
 
 const jura = Jura({
-  subsets: ["latin"],
-  variable: "--font-jura",
+  subsets: ['latin'],
+  variable: '--font-jura',
 });
 
 export const metadata: Metadata = {
-  title: "Logo Creator",
-  description: "Create your own logo with our Logo Maker App",
+  title: 'Logo Creator',
+  description: 'Create your own logo with our Logo Maker App',
 };
 
 export default function RootLayout({
