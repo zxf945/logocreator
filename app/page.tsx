@@ -2,6 +2,8 @@
 
 import Spinner from "@/app/components/Spinner";
 import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Textarea } from "@/app/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,10 +23,7 @@ import { DownloadIcon, Info, RefreshCwIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import Header from "./components/Header";
-import LogoPlaceholder from "./components/LogoPlaceholder";
 import Footer from "./components/footer";
-import { Input } from "@/app/components/ui/input";
-import { Textarea } from "@/app/components/ui/textarea";
 
 const layouts = [
   { name: "Solo", icon: "/solo.svg" },
@@ -155,6 +154,7 @@ export default function Page() {
                   required
                 />
               </div>
+
               {/* Layout Section */}
               <div className="mb-6">
                 <label className="mb-2 flex items-center text-xs font-bold uppercase text-[#6F6F6F]">
@@ -351,11 +351,11 @@ export default function Page() {
           </div>
         </form>
 
-        <div className="flex w-full flex-col">
+        <div className="flex w-full flex-col pt-12 md:pt-0">
           <Header className="hidden md:block" />{" "}
           {/* Show header on larger screens */}
-          <div className="relative flex flex-grow items-center justify-center overflow-hidden">
-            <div className="relative aspect-square w-full max-w-lg">
+          <div className="relative flex flex-grow items-center justify-center">
+            <div className="relative aspect-square w-full max-w-lg px-4">
               {generatedImage ? (
                 <>
                   <Image
@@ -388,7 +388,13 @@ export default function Page() {
                 </>
               ) : (
                 <Spinner loading={isLoading} className="size-8 text-white">
-                  <LogoPlaceholder />
+                  <div className="flex aspect-square w-full flex-col items-center justify-center rounded-xl bg-[#2C2C2C]">
+                    <h4 className="text-center text-base leading-tight text-white">
+                      Generate your dream
+                      <br />
+                      logo in 10 seconds!
+                    </h4>
+                  </div>
                 </Spinner>
               )}
             </div>
