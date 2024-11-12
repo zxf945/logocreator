@@ -23,6 +23,8 @@ import { useState } from "react";
 import Header from "./components/Header";
 import LogoPlaceholder from "./components/LogoPlaceholder";
 import Footer from "./components/footer";
+import { Input } from "@/app/components/ui/input";
+import { Textarea } from "@/app/components/ui/textarea";
 
 const layouts = [
   { name: "Solo", icon: "/solo.svg" },
@@ -128,14 +130,11 @@ export default function Page() {
                     [OPTIONAL]
                   </span>
                 </label>
-                <input
-                  id="api-key"
+
+                <Input
                   value={userAPIKey}
                   onChange={(e) => setUserAPIKey(e.target.value)}
-                  className="h-[45px] w-full rounded border border-[#2C2C2C] bg-[#343434] px-[12.5px] text-sm text-[#F3F3F3] md:w-[315px]"
                   placeholder="API Key"
-                  aria-label="API Key"
-                  tabIndex={0}
                 />
               </div>
               {/* Divider Line */}
@@ -148,14 +147,11 @@ export default function Page() {
                 >
                   Company Name
                 </label>
-                <input
-                  id="company-name"
+
+                <Input
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="h-[43.75px] w-full rounded bg-[#343434] px-[15px] text-sm text-[#F3F3F3] md:w-[315px]"
                   placeholder="Amazon"
-                  aria-label="Company Name"
-                  tabIndex={0}
                   required
                 />
               </div>
@@ -318,14 +314,10 @@ export default function Page() {
                       Additional Info
                       <InfoTooltip content="Provide any additional information about your logo" />
                     </label>
-                    <textarea
-                      id="additional-info"
+                    <Textarea
                       value={additionalInfo}
                       onChange={(e) => setAdditionalInfo(e.target.value)}
-                      className="h-[67.5px] w-full rounded bg-[#343434] p-3 text-sm text-[#F3F3F3] md:w-[315px]"
                       placeholder="Enter additional information"
-                      aria-label="Additional Info"
-                      tabIndex={0}
                     />
                   </div>
                 </div>
@@ -333,33 +325,29 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Generate Logo Button - Always visible */}
-          <div className="px-8 md:px-4">
-            <div className="py-2">
-              <button
-                className="flex w-full items-center justify-center rounded bg-[#F3F3F3] py-[12.5px] text-base font-bold text-[#2C2C2C]"
-                aria-label="Generate Logo"
-                type="submit"
-                disabled={isLoading} // Disable button while loading
-              >
-                {isLoading ? ( // Conditional rendering for loading state
-                  <div className="loader mr-2"></div> // Spinner element
-                ) : (
-                  <Image
-                    src="/generate-icon.svg"
-                    alt="Generate Icon"
-                    width={16}
-                    height={16}
-                    className="mr-2"
-                  />
-                )}
-                {isLoading ? "Loading..." : "Generate Logo"}{" "}
-                {/* Change button text */}
-              </button>
-              {/* <div className="text-center mt-1 text-xs text-[#F3F3F3]">
+          <div className="px-8 py-4 md:px-4">
+            <Button
+              size="lg"
+              className="w-full text-base font-bold"
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? ( // Conditional rendering for loading state
+                <div className="loader mr-2"></div> // Spinner element
+              ) : (
+                <Image
+                  src="/generate-icon.svg"
+                  alt="Generate Icon"
+                  width={16}
+                  height={16}
+                  className="mr-2"
+                />
+              )}
+              {isLoading ? "Loading..." : "Generate Logo"}{" "}
+            </Button>
+            {/* <div className="text-center mt-1 text-xs text-[#F3F3F3]">
             Credits: 3
           </div> */}
-            </div>
           </div>
         </form>
 
