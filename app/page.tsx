@@ -53,7 +53,7 @@ const backgroundColors = [
 ];
 
 export default function Page() {
-  const [apiKey, setApiKey] = useState("");
+  const [userAPIKey, setUserAPIKey] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [selectedLayout, setSelectedLayout] = useState(layouts[0].name);
   const [selectedStyle, setSelectedStyle] = useState(logoStyles[0].name);
@@ -73,7 +73,7 @@ export default function Page() {
     const res = await fetch("/api/generate-logo", {
       method: "POST",
       body: JSON.stringify({
-        apiKey,
+        userAPIKey,
         companyName,
         selectedLayout,
         selectedStyle,
@@ -83,15 +83,21 @@ export default function Page() {
       }),
     });
 
-    if (res.status === 429) {
-      toast({
-        variant: "destructive",
-        title: "No requests left!",
-        description: "Please add your own API key or try again in 24h.",
-      });
-    } else {
+    if (res.ok) {
       const json = await res.json();
       setGeneratedImage(`data:image/png;base64,${json.b64_json}`);
+    } else if (res.headers.get("Content-Type") === "text/plain") {
+      toast({
+        variant: "destructive",
+        title: res.statusText,
+        description: await res.text(),
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Whoops!",
+        description: `There was a problem processing your request: ${res.statusText}`,
+      });
     }
 
     setIsLoading(false);
@@ -99,7 +105,7 @@ export default function Page() {
 
   return (
     <div className="flex h-screen flex-col overflow-y-auto overflow-x-hidden bg-[#343434] md:flex-row">
-      <Header className="block md:hidden" />{" "}
+      <Header className="block md:hidden" />
       <div className="flex w-full flex-col md:flex-row">
         <form
           onSubmit={(e) => {
@@ -124,8 +130,8 @@ export default function Page() {
                 </label>
                 <input
                   id="api-key"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
+                  value={userAPIKey}
+                  onChange={(e) => setUserAPIKey(e.target.value)}
                   className="h-[45px] w-full rounded border border-[#2C2C2C] bg-[#343434] px-[12.5px] text-sm text-[#F3F3F3] md:w-[315px]"
                   placeholder="API Key"
                   aria-label="API Key"

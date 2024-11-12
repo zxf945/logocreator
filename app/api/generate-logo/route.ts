@@ -12,7 +12,7 @@ if (process.env.UPSTASH_REDIS_REST_URL) {
   ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
     // Allow 100 requests per day (~5-10 prompts)
-    limiter: Ratelimit.fixedWindow(100, "1440 m"),
+    limiter: Ratelimit.fixedWindow(5, "1440 m"),
     analytics: true,
     prefix: "logocreator",
   });
@@ -22,6 +22,7 @@ export async function POST(req: Request) {
   const json = await req.json();
   const data = z
     .object({
+      userAPIKey: z.string().optional(),
       companyName: z.string(),
       selectedLayout: z.string(),
       selectedStyle: z.string(),
@@ -43,9 +44,9 @@ export async function POST(req: Request) {
 
   const client = new Together();
 
-  // if (userAPIKey) {
-  //   client.apiKey = userAPIKey;
-  // }
+  if (data.userAPIKey) {
+    client.apiKey = data.userAPIKey;
+  }
 
   if (ratelimit) {
     const identifier = getIPAddress();
@@ -53,12 +54,10 @@ export async function POST(req: Request) {
 
     const { success } = await ratelimit.limit(identifier);
     if (!success) {
-      return Response.json(
-        "No requests left. Please add your own API key or try again in 24h.",
-        {
-          status: 429,
-        },
-      );
+      return new Response("Please add your own API key or try again in 24h.", {
+        status: 429,
+        headers: { "Content-Type": "text/plain" },
+      });
     }
   }
 
@@ -93,11 +92,10 @@ export async function POST(req: Request) {
   }
   `;
 
-  console.log(prompt);
+  // console.log(prompt);
 
-  let response;
   try {
-    response = await client.images.create({
+    const response = await client.images.create({
       prompt,
       model: "black-forest-labs/FLUX.1.1-pro",
       width: 512,
@@ -106,17 +104,25 @@ export async function POST(req: Request) {
       // @ts-expect-error - this is not typed in the API
       response_format: "base64",
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e: any) {
-    return Response.json(
-      { error: e.toString() },
-      {
-        status: 500,
-      },
-    );
-  }
+    return Response.json(response.data[0], { status: 200 });
+  } catch (error) {
+    const data = z
+      .object({
+        error: z.object({
+          error: z.object({ code: z.literal("invalid_api_key") }),
+        }),
+      })
+      .safeParse(error);
 
-  return Response.json(response.data[0]);
+    if (data.success) {
+      return new Response("Your API key is invalid.", {
+        status: 401,
+        headers: { "Content-Type": "text/plain" },
+      });
+    } else {
+      throw error;
+    }
+  }
 }
 
 export const runtime = "edge";
