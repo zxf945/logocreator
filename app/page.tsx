@@ -468,8 +468,10 @@ export default function Page() {
                   />
 
                   <div className="absolute -right-12 top-0 flex flex-col gap-2">
-                    <Button size="icon">
-                      <DownloadIcon />
+                    <Button size="icon" asChild>
+                      <a href={generatedImage} download="logo.png">
+                        <DownloadIcon />
+                      </a>
                     </Button>
                     <Button size="icon" onClick={generateLogo}>
                       <Spinner loading={isLoading}>
