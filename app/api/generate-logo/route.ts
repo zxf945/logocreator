@@ -1,8 +1,9 @@
-import Together from 'together-ai';
-import { z } from 'zod';
+import dedent from "dedent";
+import Together from "together-ai";
+import { z } from "zod";
 // import { Ratelimit } from "@upstash/ratelimit";
 // import { Redis } from "@upstash/redis";
-import { headers } from 'next/headers';
+// import { headers } from "next/headers";
 
 // let ratelimit: Ratelimit | undefined;
 
@@ -22,11 +23,11 @@ export async function POST(req: Request) {
   const data = z
     .object({
       companyName: z.string(),
-      selectedLayout: z.string(),
-      selectedLogoStyle: z.string(),
-      selectedPrimaryColor: z.string(),
-      selectedBackgroundColor: z.string(),
-      additionalInfo: z.string(),
+      selectedLayout: z.enum(["Solo", "Side", "Stack"]),
+      // selectedLogoStyle: z.string(),
+      // selectedPrimaryColor: z.string(),
+      // selectedBackgroundColor: z.string(),
+      // additionalInfo: z.string(),
     })
     .parse(json);
 
@@ -60,23 +61,37 @@ export async function POST(req: Request) {
   //   }
   // }
 
-  const prompt = `Design a professional, unique, and memorable logo that effectively represents the brand's identity and values. The logo should be versatile for use across various mediums and sizes, maintaining clarity and impact in both digital and print formats.
+  const prompt = dedent`Design a professional, unique, and memorable logo for a company that effectively represents the brand's identity and values. The logo should be versatile for use across various mediums and sizes, maintaining clarity and impact in both digital and print formats.
 
-  Here are the details:
+  Here are the company details:
 
   Company name: ${data.companyName}
+
+  ${
+    data.selectedLayout === "Solo"
+      ? `Focus solely on creating a minimalist icon or symbol without any accompanying text whatsoever. COMPANY NAME NOT INCLUDED.`
+      : ""
+  }
+
+  ${
+    data.selectedLayout === "Side"
+      ? `Have the company name placed to the right of logo you generate. Ensure the text and icon are well-aligned for visual balance.`
+      : ""
+  }
   `;
+
+  console.log(prompt);
 
   let response;
   try {
     response = await client.images.create({
       prompt,
-      model: 'black-forest-labs/FLUX.1.1-pro',
+      model: "black-forest-labs/FLUX.1.1-pro",
       width: 512,
       height: 512,
       steps: 3,
       // @ts-expect-error - this is not typed in the API
-      response_format: 'base64',
+      response_format: "base64",
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -84,14 +99,14 @@ export async function POST(req: Request) {
       { error: e.toString() },
       {
         status: 500,
-      }
+      },
     );
   }
 
   return Response.json(response.data[0]);
 }
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 // function getIPAddress() {
 //   const FALLBACK_IP_ADDRESS = '0.0.0.0';

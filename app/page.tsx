@@ -2,7 +2,7 @@
 
 import { ChevronDown, Info } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -16,7 +16,9 @@ import Footer from "./components/footer";
 export default function Page() {
   const [apiKey, setApiKey] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
+  const [selectedLayout, setSelectedLayout] = useState<
+    "Solo" | "Side" | "Stack"
+  >("Solo");
   const [selectedLogoStyle, setSelectedLogoStyle] = useState<string | null>(
     null,
   );
@@ -35,6 +37,8 @@ export default function Page() {
 
   const primaryDropdownRef = useRef<HTMLDivElement>(null); // Added ref for primary dropdown
   const backgroundDropdownRef = useRef<HTMLDivElement>(null); // Added ref for background dropdown
+
+  const [b64Image, setb64Image] = useState("");
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -77,7 +81,7 @@ export default function Page() {
     { name: "Solo", icon: "/solo.svg" },
     { name: "Side", icon: "/side.svg" },
     { name: "Stack", icon: "/stack.svg" },
-  ];
+  ] as const;
 
   const logoStyles = [
     { name: "Flashy", icon: "/flashy.svg" },
@@ -91,7 +95,8 @@ export default function Page() {
   //   setShowAdditionalOptions((prev) => !prev);
   // };
 
-  const handleGenerateLogo = async () => {
+  async function handleGenerateLogo(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setIsLoading(true); // Set loading state to true
     // Simulate logo generation logic
     // await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate async operation
@@ -111,13 +116,12 @@ export default function Page() {
     });
 
     const json = await res.json();
+    console.log(json);
+
+    setb64Image(`data:image/png;base64,${json.b64_json}`);
 
     setIsLoading(false); // Reset loading state
-  };
-
-  const handleToggleLayout = (layoutName: string) => {
-    setSelectedLayout((prev) => (prev === layoutName ? null : layoutName));
-  };
+  }
 
   const handleToggleLogoStyle = (styleName: string) => {
     setSelectedLogoStyle((prev) => (prev === styleName ? null : styleName));
@@ -142,7 +146,10 @@ export default function Page() {
       <Header className="block md:hidden" />{" "}
       {/* Show header on small screens */}
       <div className="flex w-full flex-col md:flex-row">
-        <div className="sidebar flex h-full w-full flex-col bg-[#2C2C2C] font-jura text-[#F3F3F3] md:w-auto">
+        <form
+          onSubmit={handleGenerateLogo}
+          className="sidebar flex h-full w-full flex-col bg-[#2C2C2C] font-jura text-[#F3F3F3] md:w-auto"
+        >
           <div className={`flex-grow overflow-y-auto`}>
             <div className="px-8 pb-0 pt-4 md:px-6 md:pt-6">
               {/* API Key Section */}
@@ -184,6 +191,7 @@ export default function Page() {
                   placeholder="Amazon"
                   aria-label="Company Name"
                   tabIndex={0}
+                  required
                 />
               </div>
               {/* Layout Section */}
@@ -204,12 +212,9 @@ export default function Page() {
                             ? "border-2 border-[#F3F3F3]"
                             : ""
                         }`}
-                        onClick={() => handleToggleLayout(layout.name)}
+                        onClick={() => setSelectedLayout(layout.name)}
                         tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter")
-                            handleToggleLayout(layout.name);
-                        }}
+                        type="button"
                         aria-checked={selectedLayout === layout.name}
                         role="radio"
                       >
@@ -451,9 +456,7 @@ export default function Page() {
               <button
                 className="flex w-full items-center justify-center rounded bg-[#F3F3F3] py-[12.5px] text-base font-bold text-[#2C2C2C]"
                 aria-label="Generate Logo"
-                tabIndex={0}
-                onClick={handleGenerateLogo}
-                onKeyDown={(e) => e.key === "Enter" && handleGenerateLogo()}
+                type="submit"
                 disabled={isLoading} // Disable button while loading
               >
                 {isLoading ? ( // Conditional rendering for loading state
@@ -475,13 +478,25 @@ export default function Page() {
           </div> */}
             </div>
           </div>
-        </div>
+        </form>
 
         <div className="flex w-full flex-col">
           <Header className="hidden md:block" />{" "}
           {/* Show header on larger screens */}
           <div className="flex flex-grow items-center justify-center overflow-hidden">
-            <LogoPlaceholder />
+            {b64Image ? (
+              <Image
+                // placeholder="blur"
+                // blurDataURL={imagePlaceholder.blurDataURL}
+                width={512}
+                height={512}
+                src={b64Image}
+                alt=""
+                // className={`${isFetching ? "animate-pulse" : ""} max-w-full rounded-lg object-cover shadow-sm shadow-black`}
+              />
+            ) : (
+              <LogoPlaceholder />
+            )}
           </div>
           <Footer />
         </div>
