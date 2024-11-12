@@ -4,7 +4,6 @@ import { z } from "zod";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { headers } from "next/headers";
-// import { headers } from "next/headers";
 
 let ratelimit: Ratelimit | undefined;
 
