@@ -107,6 +107,7 @@ export default function Page() {
   return (
     <div className="flex h-screen flex-col overflow-y-auto overflow-x-hidden bg-[#343434] md:flex-row">
       <Header className="block md:hidden" />
+
       <div className="flex w-full flex-col md:flex-row">
         <form
           onSubmit={(e) => {
@@ -114,9 +115,9 @@ export default function Page() {
             setGeneratedImage("");
             generateLogo();
           }}
-          className="sidebar flex h-full w-full flex-col bg-[#2C2C2C] text-[#F3F3F3] md:w-auto"
+          className="flex h-full w-full max-w-sm flex-col bg-[#2C2C2C] text-[#F3F3F3]"
         >
-          <div className={`flex-grow overflow-y-auto`}>
+          <div className="flex-grow overflow-y-auto">
             <div className="px-8 pb-0 pt-4 md:px-6 md:pt-6">
               {/* API Key Section */}
               <div className="mb-6">
@@ -165,7 +166,7 @@ export default function Page() {
                   {layouts.map((l) => (
                     <div key={l.name} className="flex flex-col items-center">
                       <button
-                        className={`mb-2 flex h-[96px] w-[96px] cursor-pointer items-center justify-center rounded bg-[#343434] focus:outline-none ${
+                        className={`mb-2 flex aspect-square w-full cursor-pointer items-center justify-center rounded bg-[#343434] focus:outline-none ${
                           selectedLayout === l.name
                             ? "border-2 border-[#F3F3F3]"
                             : ""
@@ -210,7 +211,7 @@ export default function Page() {
                       className="flex flex-col items-center"
                     >
                       <div
-                        className={`mb-1 flex h-[96px] w-[96px] cursor-pointer items-center justify-center rounded bg-[#343434] ${
+                        className={`mb-1 flex aspect-square w-full cursor-pointer items-center justify-center rounded bg-[#343434] ${
                           selectedStyle === style.name
                             ? "border-2 border-[#F3F3F3]"
                             : ""
@@ -252,7 +253,7 @@ export default function Page() {
                     value={selectedPrimaryColor}
                     onValueChange={setSelectedPrimaryColor}
                   >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select a fruit" />
                     </SelectTrigger>
                     <SelectContent>
@@ -272,6 +273,7 @@ export default function Page() {
                     </SelectContent>
                   </Select>
                 </div>
+
                 <div className="flex-1">
                   <label className="mb-1 block items-center text-xs font-bold uppercase text-[#6F6F6F]">
                     Background
@@ -281,7 +283,7 @@ export default function Page() {
                     value={selectedBackgroundColor}
                     onValueChange={setSelectedBackgroundColor}
                   >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select a fruit" />
                     </SelectTrigger>
                     <SelectContent>
@@ -325,7 +327,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="px-8 py-4 md:px-4">
+          <div className="px-8 py-4 md:px-6 md:py-6">
             <Button
               size="lg"
               className="w-full text-base font-bold"
