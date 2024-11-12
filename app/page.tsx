@@ -1,14 +1,16 @@
 "use client";
 
-import { ChevronDown, Info } from "lucide-react";
-import Image from "next/image";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import Spinner from "@/app/components/Spinner";
+import { Button } from "@/app/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ChevronDown, DownloadIcon, Info, RefreshCwIcon } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import LogoPlaceholder from "./components/LogoPlaceholder";
 import Footer from "./components/footer";
@@ -16,16 +18,12 @@ import Footer from "./components/footer";
 export default function Page() {
   const [apiKey, setApiKey] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [selectedLayout, setSelectedLayout] = useState<
-    "Solo" | "Side" | "Stack"
-  >("Solo");
-  const [selectedLogoStyle, setSelectedLogoStyle] = useState<string | null>(
-    null,
-  );
+  const [selectedLayout, setSelectedLayout] = useState("Solo");
+  const [selectedLogoStyle, setSelectedLogoStyle] = useState("Flashy");
   const [selectedPrimaryColor, setSelectedPrimaryColor] =
     useState<string>("Blue");
   const [selectedBackgroundColor, setSelectedBackgroundColor] =
-    useState<string>("Random");
+    useState("Black");
   const [additionalInfo, setAdditionalInfo] = useState("");
 
   // Added missing state variables
@@ -38,7 +36,7 @@ export default function Page() {
   const primaryDropdownRef = useRef<HTMLDivElement>(null); // Added ref for primary dropdown
   const backgroundDropdownRef = useRef<HTMLDivElement>(null); // Added ref for background dropdown
 
-  const [b64Image, setb64Image] = useState("");
+  const [generatedImage, setGeneratedImage] = useState("");
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -91,15 +89,9 @@ export default function Page() {
     { name: "Abstract", icon: "/abstract.svg" },
     { name: "Minimal", icon: "/minimal.svg" },
   ];
-  // const handleToggleAdditionalOptions = () => {
-  //   setShowAdditionalOptions((prev) => !prev);
-  // };
 
-  async function handleGenerateLogo(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setIsLoading(true); // Set loading state to true
-    // Simulate logo generation logic
-    // await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate async operation
+  async function generateLogo() {
+    setIsLoading(true);
 
     const res = await fetch("/api/generate-logo", {
       method: "POST",
@@ -110,44 +102,26 @@ export default function Page() {
         selectedLogoStyle,
         selectedPrimaryColor,
         selectedBackgroundColor,
-        // selectedColorScheme,
         additionalInfo,
       }),
     });
 
     const json = await res.json();
-    console.log(json);
 
-    setb64Image(`data:image/png;base64,${json.b64_json}`);
-
+    setGeneratedImage(`data:image/png;base64,${json.b64_json}`);
     setIsLoading(false); // Reset loading state
   }
-
-  const handleToggleLogoStyle = (styleName: string) => {
-    setSelectedLogoStyle((prev) => (prev === styleName ? null : styleName));
-  };
-
-  // Helper component for consistent tooltip usage
-  const InfoTooltip = ({ content }: { content: string }) => (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Info size={11} className="ml-2 cursor-default text-[#6F6F6F]" />
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{content}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
 
   return (
     <div className="flex h-screen flex-col overflow-y-auto overflow-x-hidden bg-[#343434] md:flex-row">
       <Header className="block md:hidden" />{" "}
-      {/* Show header on small screens */}
       <div className="flex w-full flex-col md:flex-row">
         <form
-          onSubmit={handleGenerateLogo}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setGeneratedImage("");
+            generateLogo();
+          }}
           className="sidebar flex h-full w-full flex-col bg-[#2C2C2C] font-jura text-[#F3F3F3] md:w-auto"
         >
           <div className={`flex-grow overflow-y-auto`}>
@@ -257,12 +231,8 @@ export default function Page() {
                             ? "border-2 border-[#F3F3F3]"
                             : ""
                         }`}
-                        onClick={() => handleToggleLogoStyle(style.name)}
+                        onClick={() => setSelectedLogoStyle(style.name)}
                         tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter")
-                            handleToggleLogoStyle(style.name);
-                        }}
                         aria-checked={selectedLogoStyle === style.name}
                         role="radio"
                       >
@@ -483,24 +453,54 @@ export default function Page() {
         <div className="flex w-full flex-col">
           <Header className="hidden md:block" />{" "}
           {/* Show header on larger screens */}
-          <div className="flex flex-grow items-center justify-center overflow-hidden">
-            {b64Image ? (
-              <Image
-                // placeholder="blur"
-                // blurDataURL={imagePlaceholder.blurDataURL}
-                width={512}
-                height={512}
-                src={b64Image}
-                alt=""
-                // className={`${isFetching ? "animate-pulse" : ""} max-w-full rounded-lg object-cover shadow-sm shadow-black`}
-              />
-            ) : (
-              <LogoPlaceholder />
-            )}
+          <div className="relative flex flex-grow items-center justify-center overflow-hidden">
+            <div className="relative aspect-square w-full max-w-lg">
+              {generatedImage ? (
+                <>
+                  <Image
+                    className={isLoading ? "animate-pulse" : ""}
+                    width={512}
+                    height={512}
+                    src={generatedImage}
+                    alt=""
+                  />
+
+                  <div className="absolute -right-12 top-0 flex flex-col gap-2">
+                    <Button size="icon">
+                      <DownloadIcon />
+                    </Button>
+                    <Button size="icon" onClick={generateLogo}>
+                      <Spinner loading={isLoading}>
+                        <RefreshCwIcon />
+                      </Spinner>
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <Spinner loading={isLoading} className="size-8 text-white">
+                  <LogoPlaceholder />
+                </Spinner>
+              )}
+            </div>
           </div>
           <Footer />
         </div>
       </div>
     </div>
+  );
+}
+
+function InfoTooltip({ content }: { content: string }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Info size={11} className="ml-2 cursor-default text-[#6F6F6F]" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{content}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

@@ -23,17 +23,10 @@ export async function POST(req: Request) {
   const data = z
     .object({
       companyName: z.string(),
-      selectedLayout: z.enum(["Solo", "Side", "Stack"]),
-      selectedLogoStyle: z.enum([
-        "Flashy",
-        "Tech",
-        "Modern",
-        "Playful",
-        "Abstract",
-        "Minimal",
-      ]),
-      selectedPrimaryColor: z.enum(["Blue", "Red", "Green", "Yellow"]),
-      selectedBackgroundColor: z.enum(["Random", "Gray", "Black", "White"]),
+      selectedLayout: z.string(),
+      selectedLogoStyle: z.string(),
+      selectedPrimaryColor: z.string(),
+      selectedBackgroundColor: z.string(),
       additionalInfo: z.string().optional(),
     })
     .parse(json);
@@ -84,7 +77,7 @@ export async function POST(req: Request) {
   }
   ${
     data.selectedLayout === "Solo"
-      ? `Focus solely on creating a minimalist icon or symbol without any accompanying text whatsoever. COMPANY NAME NOT INCLUDED.`
+      ? `Focus solely on creating a minimalist icon or symbol without any accompanying text whatsoever. COMPANY NAME NOT INCLUDED. Just return the logomark (not a logotype). The text ${data.companyName} should not be in the image.`
       : ""
   }
   ${

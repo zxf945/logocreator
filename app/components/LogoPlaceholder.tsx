@@ -1,8 +1,8 @@
 import React from "react";
 
 const LogoPlaceholder = () => (
-  <div className="w-full max-w-[466px] aspect-square bg-[#2C2C2C] rounded-xl flex flex-col justify-center items-center m-4 md:m-4 sm:m-0">
-    <h4 className="text-base font-jura text-white text-center leading-tight">
+  <div className="m-4 flex aspect-square w-full flex-col items-center justify-center rounded-xl bg-[#2C2C2C] sm:m-0 md:m-4">
+    <h4 className="text-center font-jura text-base leading-tight text-white">
       Generate your dream
       <br />
       logo in 10 seconds!
