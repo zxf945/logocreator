@@ -92,8 +92,6 @@ export async function POST(req: Request) {
   }
   `;
 
-  // console.log(prompt);
-
   try {
     const response = await client.images.create({
       prompt,
