@@ -7,7 +7,7 @@ export default async function middleware(
   evt: NextFetchEvent,
 ) {
   // Check for Russian traffic first
-  if (req.geo?.country === "US") {
+  if (req.geo?.country === "RU") {
     return new NextResponse("Access Denied", { status: 403 });
   }
 
